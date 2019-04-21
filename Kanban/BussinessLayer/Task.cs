@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kanban.BL
 {
-    class Task
+    public class Task
     {
         public string title;
         public string description;

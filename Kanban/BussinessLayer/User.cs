@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Kanban.BL
 {
-    class User
+    public class User
     {
         [JsonProperty]
         private string userEmail;//writing private fields to JSON

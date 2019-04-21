@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kanban.BL
 {
-    class Board
+    public class Board
     {
         public Dictionary<string, Column> boardColumns;
         private const string FIRST_COLUMN = "backlog";

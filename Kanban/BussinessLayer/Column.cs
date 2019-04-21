@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kanban.BL
 {
-    class Column
+    public class Column
     {
         private const int MAX_TASKS_IN_COLUMN = 5;
 

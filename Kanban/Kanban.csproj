@@ -90,6 +90,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PresentationLayer\EditTask.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PresentationLayer\KanbanWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -98,13 +102,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PresentationLayer\TaskWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PresentationLayer\EditTask.xaml.cs">
+      <DependentUpon>EditTask.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PresentationLayer\KanbanWindow.xaml.cs">
       <DependentUpon>KanbanWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="PresentationLayer\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PresentationLayer\TaskWindow.xaml.cs">
+      <DependentUpon>TaskWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
