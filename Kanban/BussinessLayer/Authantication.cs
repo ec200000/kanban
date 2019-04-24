@@ -18,7 +18,7 @@ namespace Kanban.BL
         {
             if (v.validateUserInfo(email, password))
             {
-                User newUser = new User(email, password,new Board(), true);
+                User newUser = new User(email, password,new Board(), false);
                 userRegisterd = FileLogger.Read();
                 if(userRegisterd == null)
                 {
@@ -33,7 +33,7 @@ namespace Kanban.BL
             return null;
         }
 
-        public static User login(string email, string password)
+        public User login(string email, string password)
         {
             if (v.validateCredentials(email,password))
             {

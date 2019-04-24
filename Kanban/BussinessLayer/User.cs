@@ -32,7 +32,7 @@ namespace Kanban.BL
             Column col = kanbancolumns[currCol];
             if (val.validateTaskInfo(title, description, dueDate) & val.checkSpaceInColumn(col)) //checks if the task info is vaild and if there is space for another task in the column and create new task
             {
-                Task task = new Task(title, description, dueDate);
+                Task task = new Task(title, description, dueDate,currCol);
                 if(!val.checkCreationTimeExsictence(task.GetCreationTime()))//after creating task checking that it has creation time
                 {
                     FileLogger.WriteErrorToLog("no creation time in new task");

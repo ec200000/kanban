@@ -36,16 +36,17 @@ namespace Kanban.BL
 
         }
 
-        public bool removeColumn(string colToRemove)
+        public bool RemoveColumn(string colToRemove)
         {
-            if(this.boardColumns.Count == 0)//there are no columns to erase
+            if (this.boardColumns.Count == 0)//there are no columns to erase
             {
                 return false;
             }
             try
             {
                 this.boardColumns.Remove(colToRemove);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 FileLogger.WriteErrorToLog(ex + "in removeColumn function");
                 return false;
@@ -53,7 +54,7 @@ namespace Kanban.BL
             return true;
         }
 
-        public bool addNewColumn(string newColToAdd)
+        public bool AddNewColumn(string newColToAdd)
         {
             try
             {

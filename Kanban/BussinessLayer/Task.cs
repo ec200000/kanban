@@ -12,13 +12,25 @@ namespace Kanban.BL
         public string description;
         public string dueDate;
         public string creationTime;
+        public string currCol;
 
-        public Task(string title, string description, string dueDate)
+        public Task(string title, string description, string dueDate, string currCol)
         {
             this.title = title;
             this.description = description;
             this.dueDate = dueDate;
             this.creationTime = DateTime.Now.ToString("HH:mm:ss");
+            this.currCol = currCol;
+        }
+
+        public string GetCurrentColumn()
+        {
+            return this.currCol;
+        }
+
+        public void SetCurrentColumn(string currCol)
+        {
+            this.currCol = currCol;
         }
 
         public string GetTitle()

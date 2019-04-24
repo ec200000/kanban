@@ -15,24 +15,25 @@ using System.Windows.Shapes;
 
 namespace Kanban.PresentationLayer
 {
-    /// <summary>
-    /// Interaction logic for Login.xaml
-    /// </summary>
     public partial class Login : Window
     {
+        UserWindowDataContext VM;
+
         public Login()
         {
             InitializeComponent();
+
+            this.VM = new UserWindowDataContext(); //format the VM
+
+            this.DataContext = this.VM;
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string email = emal.Text;
-            string password = pswd.Password;
-            User user = Authantication.login(email, password);
-            if (user != null)
+            if (this.VM.Login())//checking if the login succeed
             {
-                KanbanWindow kanban = new KanbanWindow();
+                KanbanWindow kanban = new KanbanWindow(); //opening the kanban window
                 kanban.Show();
                 Close();
             }

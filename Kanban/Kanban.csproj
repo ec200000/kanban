@@ -120,6 +120,10 @@
     <Compile Include="PresentationLayer\TaskWindow.xaml.cs">
       <DependentUpon>TaskWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PresentationLayer\ViewModel\BoardWindowColumn.cs" />
+    <Compile Include="PresentationLayer\ViewModel\BoardWindowDataContext.cs" />
+    <Compile Include="PresentationLayer\ViewModel\TaskContext.cs" />
+    <Compile Include="PresentationLayer\ViewModel\UserWindowDataContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

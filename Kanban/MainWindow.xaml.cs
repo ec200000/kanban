@@ -17,24 +17,24 @@ using System.Windows.Shapes;
 
 namespace Kanban
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window //the signup window
     {
+        UserWindowDataContext VM;
+
         public MainWindow()
         {
             InitializeComponent();
 
+            this.VM = new UserWindowDataContext(); //format the VM
+
+            this.DataContext = this.VM;
+
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string email = emal.Text;
-            string password = pswrd.Password;
-            Authantication auth = new Authantication();
-            User user = auth.signUp(email, password);
-            if (user != null) {
-                Login login = new Login();
+            if (this.VM.SignUp())
+            { //checking if the signup succeed
+                Login login = new Login(); //opening the login window
                 login.Show();
                 Close();
             }
@@ -42,9 +42,10 @@ namespace Kanban
 
         private void Button_Click2(object sender, RoutedEventArgs e)
         {
-            Login login = new Login();
+            Login login = new Login(); //opening the login window
             login.Show();
             Close();
         }
     }
 }
+

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kanban.PresentationLayer.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,34 +15,31 @@ using System.Windows.Shapes;
 
 namespace Kanban.PresentationLayer
 {
-    /// <summary>
-    /// Interaction logic for EditTask.xaml
-    /// </summary>
     public partial class EditTask : Window
     {
+        TaskContext VM;
         BL.Task task;
+
         public EditTask(BL.Task task)
         {
             InitializeComponent();
+
             this.task = task;
-            title.Text = task.title;
-            description.Text = task.description;
-            duedate.Text = task.dueDate;
+            this.VM = new TaskContext(task); //format the VM
+
+            this.DataContext = this.VM;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            string tite = title.Text;
-            string disc = description.Text;
-            string date = duedate.Text;
-            BL.Validation val = new BL.Validation();
-            if (val.validateTaskInfo(tite, disc, date)) {
-                task.SetDescription(disc);
-                task.SetDueDate(date);
-                task.SetTitle(tite);
-            }
-            else
-                MessageBox.Show("There is a problem with the thing you entered");
+            if(!VM.EditTask(task)) MessageBox.Show("There is a problem with the things you entered");
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            KanbanWindow kanban = new KanbanWindow(); //opening the kanban window
+            kanban.Show();
+            Close();
         }
     }
 }
