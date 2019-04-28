@@ -2,13 +2,16 @@
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
+using Kanban.BL;
+using Caliburn.Micro;
 
 namespace Kanban.PresentationLayer.ViewModel
 {
     public class BoardWindowDataContext : INotifyPropertyChanged
     {
-        public BoardWindowDataContext()
+        public BoardWindowDataContext(User user)
         {
+            ShowTheard(user);
         }
 
         string searchTerm = "";
@@ -21,7 +24,7 @@ namespace Kanban.PresentationLayer.ViewModel
             set
             {
                 searchTerm = value;
-              //  UpdateFilter();
+                UpdateFilter();
                 if (PropertyChanged != null)
                     PropertyChanged(this, new PropertyChangedEventArgs("SearchTerm"));
             }
@@ -54,35 +57,42 @@ namespace Kanban.PresentationLayer.ViewModel
             }
         }
 
-        private ObservableCollection<BoardWindowColumn> columns;
+        private BindableCollection<BoardWindowTask> tasks;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<BoardWindowColumn> Columns
+        public BindableCollection<BoardWindowTask> Tasks
         {
             get
             {
-                return columns;
+                return tasks;
             }
             set
             {
-                columns = value;
-               // UpdateFilter();
+                tasks = value;
+                UpdateFilter();
                 if (PropertyChanged != null)
                     PropertyChanged(this, new PropertyChangedEventArgs("Columns"));
             }
         }
-
-       /* private void UpdateFilter()
+        void ShowTheard(User user)
         {
-            CollectionViewSource cvs = new CollectionViewSource() { Source = columns };
-            ICollectionView cv = cvs.View;
-            cv.Filter = o =>
+            BindableCollection<BoardWindowTask> tasks = new BindableCollection<BoardWindowTask>();
+            foreach (Column c in user.KanBanBoard.boardColumns.Values)
             {
-                BoardWindowColumn p = o as BoardWindowColumn;
-                return (p.Content.ToUpper().Contains(SearchTerm.ToUpper()));
-            };
+                foreach (Task t in c.getTasks())
+                {
+                    if(t!=null) tasks.Add(new BoardWindowTask(t));
+                }  
+            }
+            Tasks = tasks;
+
+        }
+        private void UpdateFilter()
+        {
+            CollectionViewSource cvs = new CollectionViewSource() { Source = tasks };
+            ICollectionView cv = cvs.View;
             GridView = cv;
-        }*/
+        }
     }
 }

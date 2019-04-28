@@ -36,11 +36,11 @@ class UserWindowDataContext : INotifyPropertyChanged
     }
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public bool Login()
+    public User Login()
     {
         Authantication auth = new Authantication();
         User user = auth.login(email, pwd);
-        return user != null;
+        return user;
     }
 
     public bool SignUp() {

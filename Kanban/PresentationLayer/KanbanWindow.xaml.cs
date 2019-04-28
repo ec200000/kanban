@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Kanban.BL;
+using Kanban.PresentationLayer.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,13 @@ namespace Kanban.PresentationLayer
     /// </summary>
     public partial class KanbanWindow : Window
     {
-        public KanbanWindow()
+        BoardWindowDataContext VM;
+        public KanbanWindow(User user)
         {
             InitializeComponent();
+
+            VM = new BoardWindowDataContext(user);
+            this.DataContext = VM;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

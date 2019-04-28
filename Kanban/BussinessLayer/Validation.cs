@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Serilog;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace Kanban.BL
 {
@@ -82,6 +83,7 @@ namespace Kanban.BL
                     if (usersDictionary.ContainsKey(email))
                     {
                         FileLogger.WriteErrorToLog("The email is already in the system!");
+                        MessageBox.Show("The email is already in the system!");
                         return false;
                     }
                 }
@@ -89,6 +91,7 @@ namespace Kanban.BL
             catch(Exception ex)
             {
                 FileLogger.WriteErrorToLog(ex.ToString() + " Something went wrong in function isEmailAlreadyInSystem()!");
+                MessageBox.Show(" Something went wrong in function isEmailAlreadyInSystem()!");
                 return false;
             }
             return true;
@@ -105,6 +108,7 @@ namespace Kanban.BL
             catch(Exception ex)
             {
                 FileLogger.WriteErrorToLog(ex + " in isValidEmailFunction");
+                MessageBox.Show(ex.Message);
                 return false;
             }
         }
@@ -117,6 +121,7 @@ namespace Kanban.BL
             { 
                 string msg = "While registering, user's password is not in the right length - must be " + MIN_PASSWORD_LENGTH + "-" + MAX_PASSWORD_LENGTH + " chars!";
                 FileLogger.WriteErrorToLog(msg);
+                MessageBox.Show(msg);
                 return false;
             }
             for(int i = 0; i < password.Length; i++)

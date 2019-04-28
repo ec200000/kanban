@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows;
 
 namespace Kanban.BL
 {
@@ -48,6 +49,7 @@ namespace Kanban.BL
                 }catch(Exception ex) //when we will write the UI it will apear on the user's screen
                 {
                     Log.Error(ex, "exception in login function");
+                    MessageBox.Show(ex.Message);
                 }
                 
             }
