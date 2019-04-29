@@ -114,6 +114,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PresentationLayer\NewTask.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PresentationLayer\TaskWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -128,6 +132,9 @@
     </Compile>
     <Compile Include="PresentationLayer\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PresentationLayer\NewTask.xaml.cs">
+      <DependentUpon>NewTask.xaml</DependentUpon>
     </Compile>
     <Compile Include="PresentationLayer\TaskWindow.xaml.cs">
       <DependentUpon>TaskWindow.xaml</DependentUpon>

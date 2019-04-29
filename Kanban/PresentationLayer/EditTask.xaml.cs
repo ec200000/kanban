@@ -28,7 +28,7 @@ namespace Kanban.PresentationLayer
 
             this.task = task;
             this.user = user;
-            this.VM = new TaskContext(task); //format the VM
+            this.VM = new TaskContext(task,user); //format the VM
 
             this.DataContext = this.VM;
         }

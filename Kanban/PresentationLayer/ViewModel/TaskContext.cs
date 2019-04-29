@@ -8,6 +8,8 @@ namespace Kanban.PresentationLayer.ViewModel
 {
     public class TaskContext : INotifyPropertyChanged
     {
+        User user;
+
         string title = "";
         public string Title {
             get
@@ -86,18 +88,24 @@ namespace Kanban.PresentationLayer.ViewModel
             }
         }
 
-        public TaskContext(BL.Task task)
+        public TaskContext(Task task, User user)
         {
             this.Title = task.title;
             this.Column = task.currCol;
             this.DueDate = task.dueDate;
             this.CreationTime = task.creationTime;
             this.Description = task.description;
+            this.user = user;
+        }
+
+        public TaskContext(User user)
+        {
+            this.user = user;
         }
 
         public bool EditTask(Task task)
         {
-            BL.Validation val = new BL.Validation();
+            Validation val = new Validation();
             if (val.validateTaskInfo(title, description, dueDate))
             { //update the task
                 if (task.GetTitle() != title)
@@ -111,6 +119,18 @@ namespace Kanban.PresentationLayer.ViewModel
             else
                 return false;
                 
+        }
+        public bool CreateTask()
+        {
+            Validation val = new Validation();
+            if (val.validateTaskInfo(Title, Description, DueDate))
+            {
+                user.CreateTask(Title, Description, DueDate, Column);
+                return true;
+            }
+            else
+                return false;
+
         }
     }
 }

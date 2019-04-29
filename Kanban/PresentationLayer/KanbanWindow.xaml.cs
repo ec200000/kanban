@@ -22,12 +22,14 @@ namespace Kanban.PresentationLayer
     public partial class KanbanWindow : Window
     {
         BoardWindowDataContext VM;
+        User user;
         public KanbanWindow(User user)
         {
             InitializeComponent();
 
             VM = new BoardWindowDataContext(user);
             this.DataContext = VM;
+            this.user = user;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -43,6 +45,12 @@ namespace Kanban.PresentationLayer
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
 
+        }
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            NewTask newTask = new NewTask(user);
+            newTask.Show();
+            Close();
         }
     }
 }

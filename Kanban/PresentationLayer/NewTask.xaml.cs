@@ -16,33 +16,32 @@ using System.Windows.Shapes;
 
 namespace Kanban.PresentationLayer
 {
-    public partial class TaskWindow : Window
+    /// <summary>
+    /// Interaction logic for NewTask.xaml
+    /// </summary>
+    public partial class NewTask : Window
     {
         TaskContext VM;
-        BL.Task task;
         User user;
 
-        public TaskWindow(BL.Task task, User user)
+        public NewTask(User user)
         {
             InitializeComponent();
 
-            this.task = task;
             this.user = user;
-            this.VM = new TaskContext(task,user); //format the VM
-
+            this.VM = new TaskContext(user); //format the VM
             this.DataContext = this.VM;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            EditTask edit = new EditTask(task,user); //open the task edit window
-            edit.Show();
-            Close();
+            bool b = VM.CreateTask();
+            if (!b) MessageBox.Show("There is a problem with the things you entered");
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            KanbanWindow kanban = new KanbanWindow(user); //return to the kanban window
+            KanbanWindow kanban = new KanbanWindow(user); //opening the kanban window
             kanban.Show();
             Close();
         }
