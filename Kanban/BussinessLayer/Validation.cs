@@ -233,6 +233,14 @@ namespace Kanban.BL
             }
             return true;
         }
+
+        public bool validateColumnInfo(string title, Dictionary<string, Column> d)
+        {
+            foreach (string s in d.Keys) {
+                if (s.Equals(title)) return false;
+            }
+            return true;
+        }
         /*public static void Main()
         {
             //Console.WriteLine(isCredaentialsValid("danaK@g", "123"));

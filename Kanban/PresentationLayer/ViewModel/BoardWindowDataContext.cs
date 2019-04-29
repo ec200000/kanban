@@ -9,8 +9,10 @@ namespace Kanban.PresentationLayer.ViewModel
 {
     public class BoardWindowDataContext : INotifyPropertyChanged
     {
+        User user;
         public BoardWindowDataContext(User user)
         {
+            this.user = user;
             ShowTheard(user);
         }
 
@@ -93,6 +95,32 @@ namespace Kanban.PresentationLayer.ViewModel
             CollectionViewSource cvs = new CollectionViewSource() { Source = tasks };
             ICollectionView cv = cvs.View;
             GridView = cv;
+        }
+
+        string column = "";
+        public string Column
+        {
+            get
+            {
+                return column;
+            }
+            set
+            {
+                column = value;
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs("Column"));
+            }
+        }
+
+        public bool CreateColumn() {
+            Validation val = new Validation();
+            if (val.validateColumnInfo(Column,user.KanBanBoard.boardColumns))
+            {
+                user.CreateColumn(Column);
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using Newtonsoft.Json;
-
+using System.Linq;
 
 namespace Kanban.BL
 {
@@ -28,6 +28,7 @@ namespace Kanban.BL
         public bool CreateTask(string title, string description, string dueDate, string currCol)
         {
             Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
+            kanbancolumns.First();
             Validation val = new Validation();
             Column col = kanbancolumns[currCol];
             if (val.validateTaskInfo(title, description, dueDate) & val.checkSpaceInColumn(col)) //checks if the task info is vaild and if there is space for another task in the column and create new task
@@ -50,8 +51,23 @@ namespace Kanban.BL
                 return false;
             }
         }
-        
-       public bool PromoteTaskToNextPhase(Task task, string source, string target)
+
+        public bool CreateColumn(string title)
+        {
+            Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
+            Validation val = new Validation();
+            if (val.validateColumnInfo(title,kanbancolumns)) {
+                KanBanBoard.boardColumns.Add(title, new Column());
+                FileLogger.write(Authantication.userRegisterd); //update dictionary
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool PromoteTaskToNextPhase(Task task, string source, string target)
         {
             if(task != null)
             {
@@ -205,6 +221,47 @@ namespace Kanban.BL
 
             return false; //if the new date is invaild - return false
         }
+        private bool DeleteTask(Task task)
+        {
+            if (task != null)
+            {
+                Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
+                Validation val = new Validation();
+                int index = kanbancolumns[task.currCol].IsTaskHere(task);
+                if (index != -1) //check if the task is in the column 
+                {
+                    Column sourceCol = kanbancolumns[task.currCol];
+                    sourceCol.RemoveTask(task); //remove task from source column
+                    kanbancolumns.Remove(task.currCol); //remove previous column
+                    sourceCol.SortByCreationTime();
+                    kanbancolumns.Add(task.currCol, sourceCol); //add new column 
+                    FileLogger.write(Authantication.userRegisterd); //write to file
+                    return true;
+                }
+                else
+                {
+                    FileLogger.WriteNullObjectExceptionToLogger<Task>("DeleteTask function");
+                    return false;
+                }
 
+            }
+            else
+            {
+                FileLogger.WriteNullObjectExceptionToLogger<Task>("DeleteTask function");
+                return false;
+            }
+        }
+        public bool DeleteTask(object task)
+        {
+            if (task is Task)
+            {
+                return DeleteTask((Task)task);
+            }
+            else
+            {
+                FileLogger.WriteNullObjectExceptionToLogger<Task>("DeleteTask function");
+                return false;
+            }
+        }
     }
 }

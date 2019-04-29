@@ -122,6 +122,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PresentationLayer\NewColumn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PresentationLayer\EditTask.xaml.cs">
@@ -141,6 +145,9 @@
     </Compile>
     <Compile Include="PresentationLayer\ViewModel\BoardWindowTask.cs" />
     <Compile Include="PresentationLayer\ViewModel\BoardWindowDataContext.cs" />
+    <Compile Include="PresentationLayer\NewColumn.xaml.cs">
+      <DependentUpon>NewColumn.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PresentationLayer\ViewModel\TaskContext.cs" />
     <Compile Include="PresentationLayer\ViewModel\UserWindowDataContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

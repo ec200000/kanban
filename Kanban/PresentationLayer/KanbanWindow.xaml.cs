@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.VisualBasic;
 
 namespace Kanban.PresentationLayer
 {
@@ -31,20 +32,15 @@ namespace Kanban.PresentationLayer
             this.DataContext = VM;
             this.user = user;
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            user.DeleteTask(Tasks.SelectedItem);
         }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-
+            NewColumn newColumn = new NewColumn(user);
+            newColumn.Show();
+            Close();
         }
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
