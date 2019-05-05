@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.VisualBasic;
+using Kanban.InterfaceLayer;
 
 namespace Kanban.PresentationLayer
 {
@@ -24,13 +25,16 @@ namespace Kanban.PresentationLayer
     {
         BoardWindowDataContext VM;
         User user;
-        public KanbanWindow(User user)
+        string email;
+        public KanbanWindow(string user)
         {
             InitializeComponent();
 
             VM = new BoardWindowDataContext(user);
             this.DataContext = VM;
-            this.user = user;
+            Service service = new Service();
+            this.user = service.GetUser(user);
+            this.email = user;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -38,13 +42,13 @@ namespace Kanban.PresentationLayer
         }
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            NewColumn newColumn = new NewColumn(user);
+            NewColumn newColumn = new NewColumn(email);
             newColumn.Show();
             Close();
         }
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            NewTask newTask = new NewTask(user);
+            NewTask newTask = new NewTask(email);
             newTask.Show();
             Close();
         }

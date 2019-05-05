@@ -3,6 +3,7 @@ using Kanban.BL;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Kanban.InterfaceLayer;
 
 namespace Kanban.PresentationLayer.ViewModel
 {
@@ -88,19 +89,21 @@ namespace Kanban.PresentationLayer.ViewModel
             }
         }
 
-        public TaskContext(Task task, User user)
+        public TaskContext(Task task, string user)
         {
             this.Title = task.title;
             this.Column = task.currCol;
             this.DueDate = task.dueDate;
             this.CreationTime = task.creationTime;
             this.Description = task.description;
-            this.user = user;
+            Service service = new Service();
+            this.user = service.GetUser(user);
         }
 
-        public TaskContext(User user)
+        public TaskContext(string user)
         {
-            this.user = user;
+            Service service = new Service();
+            this.user = service.GetUser(user);
         }
 
         public bool EditTask(Task task)
@@ -109,11 +112,11 @@ namespace Kanban.PresentationLayer.ViewModel
             if (val.validateTaskInfo(title, description, dueDate))
             { //update the task
                 if (task.GetTitle() != title)
-                    task.SetTitle(title);
+                    user.changeTitle(task, title, task.GetCurrentColumn());
                 if (task.GetDescription() != description)
-                    task.SetDescription(description);
+                    user.changeDescription(task, description, task.GetCurrentColumn());
                 if (task.GetDueDate() != dueDate)
-                    task.SetDueDate(dueDate);
+                    user.changeDueDate(task, dueDate, task.GetCurrentColumn());
                 return true;
             }
             else

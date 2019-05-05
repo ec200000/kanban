@@ -32,10 +32,10 @@ namespace Kanban.PresentationLayer
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             User user = this.VM.Login();
+            string email = VM.Email;
             if (user!=null)//checking if the login succeed
             {
-                user.CreateTask("hii", "bye", "11/11/11", "backlog");
-                KanbanWindow kanban = new KanbanWindow(user); //opening the kanban window
+                KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
                 kanban.Show();
                 Close();
             }

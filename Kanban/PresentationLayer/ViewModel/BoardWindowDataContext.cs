@@ -4,16 +4,19 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using Kanban.BL;
 using Caliburn.Micro;
+using Kanban.InterfaceLayer;
+using System.Windows;
 
 namespace Kanban.PresentationLayer.ViewModel
 {
     public class BoardWindowDataContext : INotifyPropertyChanged
     {
         User user;
-        public BoardWindowDataContext(User user)
+        public BoardWindowDataContext(string user)
         {
-            this.user = user;
-            ShowTheard(user);
+            Service service = new Service();
+            this.user = service.GetUser(user);
+            ShowTheard(this.user);
         }
 
         string searchTerm = "";
@@ -80,16 +83,19 @@ namespace Kanban.PresentationLayer.ViewModel
         void ShowTheard(User user)
         {
             BindableCollection<BoardWindowTask> tasks = new BindableCollection<BoardWindowTask>();
-            foreach (Column c in user.KanBanBoard.boardColumns.Values)
+            foreach (string col in user.KanBanBoard.boardColumns)
             {
-                foreach (Task t in c.getTasks())
+                Column col = user.KanBanBoard.boardColumns[colName];
+                foreach (Task t in col.getTasks())
                 {
-                    if(t!=null) tasks.Add(new BoardWindowTask(t));
-                }  
+                    if (t != null)
+                        tasks.Add(new BoardWindowTask(t));
+                }
+
             }
             Tasks = tasks;
-
         }
+
         private void UpdateFilter()
         {
             CollectionViewSource cvs = new CollectionViewSource() { Source = tasks };

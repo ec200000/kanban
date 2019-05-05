@@ -28,7 +28,6 @@ namespace Kanban.BL
         public bool CreateTask(string title, string description, string dueDate, string currCol)
         {
             Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
-            kanbancolumns.First();
             Validation val = new Validation();
             Column col = kanbancolumns[currCol];
             if (val.validateTaskInfo(title, description, dueDate) & val.checkSpaceInColumn(col)) //checks if the task info is vaild and if there is space for another task in the column and create new task

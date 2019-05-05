@@ -1,4 +1,5 @@
 ﻿using Kanban.BL;
+using Kanban.InterfaceLayer;
 using Kanban.PresentationLayer.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -21,15 +22,17 @@ namespace Kanban.PresentationLayer
         TaskContext VM;
         BL.Task task;
         User user;
+        string email;
 
-        public EditTask(BL.Task task, User user)
+        public EditTask(BL.Task task, string user)
         {
             InitializeComponent();
 
             this.task = task;
-            this.user = user;
+            Service service = new Service();
+            this.user = service.GetUser(user);
             this.VM = new TaskContext(task,user); //format the VM
-
+            this.email = user;
             this.DataContext = this.VM;
         }
 
@@ -40,7 +43,7 @@ namespace Kanban.PresentationLayer
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            KanbanWindow kanban = new KanbanWindow(user); //opening the kanban window
+            KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
             kanban.Show();
             Close();
         }
