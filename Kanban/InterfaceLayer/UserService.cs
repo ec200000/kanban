@@ -92,5 +92,18 @@ namespace Kanban.InterfaceLayer
             BL.Task task = new BL.Task(currTask.Title, currTask.Description, currTask.DueDate, currCol);
             return user.PromoteTaskToNextPhase(task, currCol, targetCol);
         }
+
+        public bool SwapColumnsPosition(string colBefore, string colToMove, string userName)
+        {
+            User user = GetUser(userName);
+            return user.swapColumnsPosition(colBefore, colToMove);
+        }
+
+        public bool EditTask(string title, string description, string dueDate, string userName, string currCol)
+        {
+            User user = GetUser(userName);
+            BL.Task task = new BL.Task(title, description, dueDate, currCol);
+            return user.changeTitle(task, title, currCol) & user.changeDescription(task, description, currCol) & user.changeDueDate(task, dueDate, currCol);
+        }
     }
 }

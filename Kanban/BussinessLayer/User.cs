@@ -201,7 +201,7 @@ namespace Kanban.BL
                     }
                     else
                     {
-                        string msg = "the task does not appear in any of the board's columns OR te user wanted to change task in DONE column!";
+                        string msg = "the task does not appear in any of the board's columns OR the user wanted to change task in DONE column!";
                         FileLogger.WriteErrorToLog(msg);
                         return false; //if the task is not in the columns return false
                     }

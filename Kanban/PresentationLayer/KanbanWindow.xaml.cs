@@ -97,5 +97,17 @@ namespace Kanban.PresentationLayer
             replace.Show();
             Close();
         }
+
+        private void Data_MouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            BoardWindowTask bwk = Tasks.SelectedItem as BoardWindowTask;
+            if (bwk != null)
+            {
+                BL.Task task = new BL.Task(bwk.Title, bwk.Description, bwk.DueDate, bwk.Column);
+                EditTask edit = new EditTask(task,email);
+                edit.Show();
+                Close();
+            }
+        }
     }
 }

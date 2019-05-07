@@ -113,17 +113,15 @@ namespace Kanban.PresentationLayer.ViewModel
             Validation val = new Validation();
             if (val.validateTaskInfo(title, description, dueDate))
             { //update the task
-                if (task.GetTitle() != title)
-                    user.changeTitle(task, title, task.GetCurrentColumn());
-                if (task.GetDescription() != description)
-                    user.changeDescription(task, description, task.GetCurrentColumn());
-                if (task.GetDueDate() != dueDate)
-                    user.changeDueDate(task, dueDate, task.GetCurrentColumn());
-                return true;
+                if(user.changeTitle(task, Title, task.GetCurrentColumn())&&
+                user.changeDescription(task, Description, task.GetCurrentColumn())&&
+                user.changeDueDate(task, DueDate, task.GetCurrentColumn()))  
+                    return true;
+                else
+                    return false;
             }
             else
                 return false;
-                
         }
         public bool CreateTask()
         {

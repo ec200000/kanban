@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="KanbanWindow" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="Tasks" ItemsSource="{Binding GridView, Mode=OneWay}" SelectedItem="{Binding Selected}" HorizontalAlignment="Left" Height="320" Margin="10,50,0,0" VerticalAlignment="Top" Width="774" Background="#FFFFFBC8" BorderBrush="#FFC0AB23"/>
+        <DataGrid x:Name="Tasks" ItemsSource="{Binding GridView, Mode=OneWay}" SelectedItem="{Binding Selected}" HorizontalAlignment="Left" Height="320" Margin="10,50,0,0" VerticalAlignment="Top" Width="774" Background="#FFFFFBC8" BorderBrush="#FFC0AB23" MouseDoubleClick="Data_MouseDoubleClick"/>
         <Button Content="Edit Task" HorizontalAlignment="Left" Margin="335,10,0,0" VerticalAlignment="Top" Height="19" Width="110" Background="#FFFEFF9F" Click="Button_Click" Grid.ColumnSpan="2"/>
         <Button Content="Create A New Column" HorizontalAlignment="Left" Margin="475,10,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_2" Grid.Column="1"/>
         <Button Content="Create A New Task" HorizontalAlignment="Left" Margin="635,10,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_3" Grid.Column="1"/>

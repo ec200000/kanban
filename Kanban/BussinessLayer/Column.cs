@@ -55,29 +55,7 @@ namespace Kanban.BL
 
         public void SortByDueDate()
         {
-            string[] arr = new string[GetNumOfTasks()];
-            int[] indexes = new int[GetNumOfTasks()];
-            List<Task> temp = new List<Task>();
-            for (int i = 0; i < arr.Length; i++)
-            {
-                if (tasks.ElementAt(i) != null)
-                    arr[i] = tasks.ElementAt(i).GetDueDate();
-            }
-            Array.Sort(arr);
-            for (int i = 0; i < arr.Length; i++)
-            {
-                for (int j = 0; j < arr.Length; j++)
-                {
-                    if (tasks.ElementAt(j) != null)
-                        if (arr[i].Equals(tasks.ElementAt(j).GetDueDate()))
-                            indexes[i] = j;
-                }
-            }
-            for (int j = 0; j < arr.Length; j++)
-            {
-                temp.Insert(j, tasks.ElementAt(indexes[j]));
-            }
-            tasks = temp;
+            this.tasks.Sort((a, b) => DateTime.Compare(DateTime.Parse(a.GetDueDate()), DateTime.Parse(b.GetDueDate())));
         }
 
         public bool RemoveTask(Task task)
@@ -92,33 +70,11 @@ namespace Kanban.BL
         }
         public void SortByCreationTime()
         {
-            string[] arr = new string[GetNumOfTasks()];
-            int[] indexes = new int[GetNumOfTasks()];
-            List<Task> temp = new List<Task>();
-            for (int i = 0; i < arr.Length; i++)
-            {
-                if(tasks.ElementAt(i)!=null)
-                    arr[i] = tasks.ElementAt(i).GetCreationTime();
-            }
-            Array.Sort(arr);
-            for (int i = 0; i < arr.Length; i++)
-            {
-                for (int j = 0; j < arr.Length; j++)
-                {
-                    if (tasks.ElementAt(j) != null)
-                        if (arr[i].Equals(tasks.ElementAt(j).GetCreationTime()))
-                            indexes[i] = j;
-                }
-            }
-            for (int j = 0; j < arr.Length; j++)
-            {
-                temp.Insert(j, tasks.ElementAt(indexes[j]));
-            }
-            tasks = temp;
+            this.tasks.Sort((a, b) => DateTime.Compare(DateTime.Parse(a.GetCreationTime()), DateTime.Parse(b.GetCreationTime())));
         }
         public int IsTaskHere(Task task)//checking if a task is in this column
         {
-            return this.tasks.FindIndex(a => a.Equals(task));
+            return tasks.FindIndex(a => a.Equals(task));
         }
         public void Print()
         {
