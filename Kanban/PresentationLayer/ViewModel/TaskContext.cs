@@ -41,12 +41,12 @@ namespace Kanban.PresentationLayer.ViewModel
                     PropertyChanged(this, new PropertyChangedEventArgs("Description"));
             }
         }
-        string dueDate = "";
-        public string DueDate
+        DateTime dueDate;
+        public DateTime DueDate
         {
             get
             {
-                return dueDate;
+                return dueDate.Date;
             }
             set
             {
@@ -106,16 +106,18 @@ namespace Kanban.PresentationLayer.ViewModel
         {
             UserService service = new UserService();
             this.user = service.GetUser(user);
+            this.username = user;
         }
 
         public bool EditTask(Task task)
         {
             Validation val = new Validation();
-            if (val.validateTaskInfo(title, description, dueDate))
+            UserService service = new UserService();
+            if (val.validateTaskInfo(Title, Description, DueDate))
             { //update the task
-                if(user.changeTitle(task, Title, task.GetCurrentColumn())&&
-                user.changeDescription(task, Description, task.GetCurrentColumn())&&
-                user.changeDueDate(task, DueDate, task.GetCurrentColumn()))  
+                Task newTask = new Task(Title, description, DueDate, Column, task.creationTime);
+                Column currentColumn = user.KanBanBoard.boardColumns[newTask.currCol];
+                if (service.EditTask(task, newTask,username,task.currCol))
                     return true;
                 else
                     return false;

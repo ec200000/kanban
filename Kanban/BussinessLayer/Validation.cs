@@ -151,7 +151,7 @@ namespace Kanban.BL
 
         //this function validates the task info - description, title, due date and creation time
         //A task must have everything except description
-        public bool validateTaskInfo(string title, string description, string dueDate)
+        public bool validateTaskInfo(string title, string description, DateTime dueDate)
         {
             if (!checkDescriptionLength(description))
                 return false;
@@ -189,9 +189,9 @@ namespace Kanban.BL
         }
 
         //every task must have due date
-        public bool checkDueDateExsictence(string dueDate)
+        public bool checkDueDateExsictence(DateTime dueDate)
         {
-            if (dueDate == null || dueDate.Length == 0)
+            if (dueDate == null || dueDate.ToString().Length == 0)
             {
                 FileLogger.WriteErrorToLog("While task creating, task must have due date!");
                 return false;

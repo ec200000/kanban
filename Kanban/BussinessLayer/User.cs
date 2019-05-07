@@ -26,7 +26,7 @@ namespace Kanban.BL
             this.isconnected = isconnected;
         }
 
-        public bool CreateTask(string title, string description, string dueDate, string currCol)
+        public bool CreateTask(string title, string description, DateTime dueDate, string currCol)
         {
             Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
             //kanbancolumns.First();
@@ -82,7 +82,7 @@ namespace Kanban.BL
                     FileLogger.WriteErrorToLog("can't create column because there is already one with the same name!");
                     return false;
                 }
-                if (colBefore.ToLower().Equals("empty")|| colBefore.Equals(""))//if the user wants to create a first new column
+                if (colBefore.ToLower().Equals("empty"))//if the user wants to create a first new column
                 {
                     KanBanBoard.columnsOrder.AddFirst(newCol);
                     KanBanBoard.boardColumns.Add(newCol, new Column());
@@ -178,113 +178,6 @@ namespace Kanban.BL
             return this.userPassword;
         }
 
-        public bool changeDescription(Task task, string newDes, string currCol)
-        {
-            Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
-            Column currentColumn;
-            Validation val = new Validation();
-            if (task != null)
-            {
-                if (val.checkDescriptionLength(newDes)) //if the new description length is vaild - change the old description and return true  
-                {
-                    int index = kanbancolumns[currCol].IsTaskHere(task);
-                    if (index != -1)
-                    {
-                        currentColumn = kanbancolumns[currCol];
-
-                        kanbancolumns.Remove(currCol); //remove previous column
-                        List<Task> tasks = currentColumn.getTasks();
-                        tasks.ElementAt(index).SetDescription(newDes); //update task
-                        kanbancolumns.Add(currCol, currentColumn); //add new column
-                        FileLogger.write(Authantication.userRegisterd); //write to file
-                        return true;
-                    }
-                    else
-                    {
-                        string msg = "the task does not appear in any of the board's columns OR the user wanted to change task in DONE column!";
-                        FileLogger.WriteErrorToLog(msg);
-                        return false; //if the task is not in the columns return false
-                    }
-                }
-            }
-            else
-            {
-                FileLogger.WriteNullObjectExceptionToLogger<Task>("changeDescription function");
-            }
-            return false; //if the new description is invaild - return false
-        }
-
-        public bool changeTitle(Task task, string newTitle, string currCol) //if the new title length is vaild - change the old title and return true 
-        {
-            Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
-            Column currentColumn;
-            Validation val = new Validation();
-            if (task != null)
-            {
-                if (val.checkTitleLength(newTitle))
-                {
-                    int index = kanbancolumns[currCol].IsTaskHere(task);
-                    if (index != -1)
-                    {
-                        currentColumn = kanbancolumns[currCol];
-                        kanbancolumns.Remove(currCol); //remove previous column
-                        List<Task> tasks = currentColumn.getTasks();
-                        tasks.ElementAt(index).SetTitle(newTitle); //update task
-                        kanbancolumns.Add(currCol, currentColumn); //add new column
-                        FileLogger.write(Authantication.userRegisterd); //write to file 
-                        return true;
-                    }
-                    else
-                    {
-                        string msg = "the task does not appear in any of the board's columns OR te user wanted to change task in DONE column!";
-                        FileLogger.WriteErrorToLog(msg);
-                        return false; //if the task is not in the columns return false
-                    }
-                }
-            }
-            else
-            {
-                FileLogger.WriteNullObjectExceptionToLogger<Task>("changeTitle function");
-            }
-            return false; //if the new title is invaild - return false
-
-        }
-        public bool changeDueDate(Task task, string newDate, string currCol)
-        {
-            Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
-            Column currentColumn;
-            Validation val = new Validation();
-            if (task != null)
-            {
-                if (val.checkDueDateExsictence(newDate)) //if the new date is vaild - change the old one and return true
-                {
-                    int index = kanbancolumns[currCol].IsTaskHere(task);
-                    if (index != -1)
-                    {
-                        currentColumn = kanbancolumns[currCol];
-                        kanbancolumns.Remove(currCol); //remove previous column
-                        List<Task> tasks = currentColumn.getTasks();
-                        tasks.ElementAt(index).SetDueDate(newDate); //update task
-                        kanbancolumns.Add(currCol, currentColumn); //add new column
-                        FileLogger.write(Authantication.userRegisterd);
-                        return true;
-                    }
-                    else
-                    {
-                        string msg = "the task does not appear in any of the board's columns OR te user wanted to change task in DONE column!";
-                        FileLogger.WriteErrorToLog(msg);
-                        return false; //if the task is not in the columns return false 
-                    }
-
-                }
-            }
-            else
-            {
-                FileLogger.WriteNullObjectExceptionToLogger<Task>("changeDueDate function");
-            }
-
-            return false; //if the new date is invaild - return false
-        }
         private bool DeleteTask(Task task)
         {
             if (task != null)
@@ -333,5 +226,10 @@ namespace Kanban.BL
             return this.KanBanBoard.columnsOrder.Find(currCol).Next.Value;
         }
 
+        public bool EditTask(Task oldTask, Task newTask, string currCol)
+        {
+            return this.KanBanBoard.boardColumns[currCol].RemoveTask(oldTask) &&
+                                this.KanBanBoard.boardColumns[currCol].AddTask(newTask);
+        }
     }
 }

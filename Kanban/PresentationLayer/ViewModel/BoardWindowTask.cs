@@ -38,12 +38,12 @@ namespace Kanban.PresentationLayer.ViewModel
                     PropertyChanged(this, new PropertyChangedEventArgs("Description"));
             }
         }
-        string dueDate = "";
-        public string DueDate
+        DateTime dueDate;
+        public DateTime DueDate
         {
             get
             {
-                return dueDate;
+                return dueDate.Date;
             }
             set
             {
@@ -94,5 +94,6 @@ namespace Kanban.PresentationLayer.ViewModel
             this.CreationTime = task.creationTime;
             this.Description = task.description;
         }
+
     }
 }

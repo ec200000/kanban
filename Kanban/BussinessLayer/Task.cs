@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,16 +11,26 @@ namespace Kanban.BL
     {
         public string title;
         public string description;
-        public string dueDate;
+        public DateTime dueDate;
         public string creationTime;
         public string currCol;
 
-        public Task(string title, string description, string dueDate, string currCol)
+        [JsonConstructor]
+        public Task(string title, string description, DateTime dueDate, string currCol)
         {
             this.title = title;
             this.description = description;
             this.dueDate = dueDate;
             this.creationTime = DateTime.Now.ToString("HH:mm:ss");
+            this.currCol = currCol;
+        }
+
+        public Task(string title, string description, DateTime dueDate, string currCol, string creationTime)
+        {
+            this.title = title;
+            this.description = description;
+            this.dueDate = dueDate;
+            this.creationTime = creationTime;
             this.currCol = currCol;
         }
 
@@ -53,12 +64,12 @@ namespace Kanban.BL
             this.description = description;
         }
 
-        public string GetDueDate()
+        public DateTime GetDueDate()
         {
             return dueDate;
         }
 
-        public void SetDueDate(String dueDate)
+        public void SetDueDate(DateTime dueDate)
         {
             this.dueDate = dueDate;
         }

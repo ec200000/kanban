@@ -1,5 +1,6 @@
 ﻿﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace Kanban.BL
 
         public void SortByDueDate()
         {
-            this.tasks.Sort((a, b) => DateTime.Compare(DateTime.Parse(a.GetDueDate()), DateTime.Parse(b.GetDueDate())));
+            this.tasks.Sort((a, b) => DateTime.Compare(a.GetDueDate().Date, b.GetDueDate().Date));
         }
 
         public bool RemoveTask(Task task)
@@ -66,15 +67,14 @@ namespace Kanban.BL
                 return false;
             }
             return true;
-
         }
         public void SortByCreationTime()
         {
-            this.tasks.Sort((a, b) => DateTime.Compare(DateTime.Parse(a.GetCreationTime()), DateTime.Parse(b.GetCreationTime())));
+            this.tasks.Sort((a, b) => TimeSpan.Compare(DateTime.Parse(a.GetCreationTime()).TimeOfDay, DateTime.Parse(b.GetCreationTime()).TimeOfDay));
         }
         public int IsTaskHere(Task task)//checking if a task is in this column
         {
-            return tasks.FindIndex(a => a.Equals(task));
+            return this.tasks.FindIndex(a => a.Equals(task));
         }
         public void Print()
         {

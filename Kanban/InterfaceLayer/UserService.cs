@@ -65,7 +65,7 @@ namespace Kanban.InterfaceLayer
             }
         }
 
-        public bool CreateTask(string userName, string title, string description, string dueDate)
+        public bool CreateTask(string userName, string title, string description, DateTime dueDate)
         {
             User user = GetUser(userName);
             string currCol = user.KanBanBoard.columnsOrder.ElementAt(0);
@@ -99,11 +99,10 @@ namespace Kanban.InterfaceLayer
             return user.swapColumnsPosition(colBefore, colToMove);
         }
 
-        public bool EditTask(string title, string description, string dueDate, string userName, string currCol)
+        public bool EditTask(BL.Task old, BL.Task newTask, string userName, string currCol)
         {
             User user = GetUser(userName);
-            BL.Task task = new BL.Task(title, description, dueDate, currCol);
-            return user.changeTitle(task, title, currCol) & user.changeDescription(task, description, currCol) & user.changeDueDate(task, dueDate, currCol);
+            return user.EditTask(old, newTask, currCol);
         }
     }
 }
