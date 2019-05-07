@@ -23,7 +23,7 @@ namespace Kanban.BL
          * his login details are correct (the email and the password are matching)*/
         public bool validateCredentials(string email, string password)
         {
-            if(!isCredaentialsValid(email, password))
+            if (!isCredaentialsValid(email, password))
             {
                 return false;
             }
@@ -38,7 +38,7 @@ namespace Kanban.BL
             try
             {
                 Dictionary<string, User> usersDictionary = FileLogger.Read();
-                if(usersDictionary != null && usersDictionary.Count != 0)
+                if (usersDictionary != null && usersDictionary.Count != 0)
                 {
                     if (email == null || password == null || !usersDictionary.ContainsKey(email))
                     {
@@ -46,9 +46,9 @@ namespace Kanban.BL
                         return false;
                     }
                 }
-               
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 FileLogger.WriteErrorToLog(ex.ToString() + " Something went wrong in function isCredaentialsValid()!");
                 return false;
@@ -88,7 +88,7 @@ namespace Kanban.BL
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 FileLogger.WriteErrorToLog(ex.ToString() + " Something went wrong in function isEmailAlreadyInSystem()!");
                 MessageBox.Show(" Something went wrong in function isEmailAlreadyInSystem()!");
@@ -105,7 +105,7 @@ namespace Kanban.BL
                 var addr = new System.Net.Mail.MailAddress(email);
                 return addr.Address == email;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 FileLogger.WriteErrorToLog(ex + " in isValidEmailFunction");
                 MessageBox.Show(ex.Message);
@@ -118,17 +118,17 @@ namespace Kanban.BL
         {
             bool capitalL = false, lowerL = false, number = false;
             if (password.Length > MAX_PASSWORD_LENGTH | password.Length < MIN_PASSWORD_LENGTH)//incorrect length
-            { 
+            {
                 string msg = "While registering, user's password is not in the right length - must be " + MIN_PASSWORD_LENGTH + "-" + MAX_PASSWORD_LENGTH + " chars!";
                 FileLogger.WriteErrorToLog(msg);
                 MessageBox.Show(msg);
                 return false;
             }
-            for(int i = 0; i < password.Length; i++)
+            for (int i = 0; i < password.Length; i++)
             {
                 if (capitalL & lowerL & number) //the password contains at least one lower char, upper and number
                     break;
-                if(password.ElementAt(i) >= 'a' & password.ElementAt(i) <= 'z')
+                if (password.ElementAt(i) >= 'a' & password.ElementAt(i) <= 'z')
                 {
                     lowerL = true;
                 }
@@ -141,7 +141,7 @@ namespace Kanban.BL
                     number = true;
                 }
             }
-            if(!capitalL | !lowerL | !number)//the password does not at least one of the three needed charcters
+            if (!capitalL | !lowerL | !number)//the password does not at least one of the three needed charcters
             {
                 FileLogger.WriteErrorToLog("While registering, user's password does not contains upper case char OR lower case char OR a number!");
                 return false;
@@ -166,7 +166,7 @@ namespace Kanban.BL
         public bool checkTitleLength(string title)
         {
             if (title == null || title.Length > TITLE_LENGTH | title.Length == 0) //title length is over the limit or does not exists
-            { 
+            {
                 string msg = "While task creating, task's description length must be at most " + TITLE_LENGTH + "characters!";
                 FileLogger.WriteErrorToLog(msg);
                 return false;
@@ -225,19 +225,24 @@ namespace Kanban.BL
             return true;
         }
 
+        //checks task's parameters
         public bool validateTaskInfoIsNotNull(Task task)
         {
-            if(task.GetTitle() == null || task.GetDescription() == null || task.GetDueDate() == null || task.GetCreationTime() == null)
+            if (task.GetTitle() == null || task.GetDescription() == null || task.GetDueDate() == null || task.GetCreationTime() == null)
             {
+                FileLogger.WriteErrorToLog("There are some of the task's parameters that are null!");
                 return false;
             }
             return true;
         }
 
+        //checks if the column is already exsits
         public bool validateColumnInfo(string title, Dictionary<string, Column> d)
         {
-            foreach (string s in d.Keys) {
-                if (s.Equals(title)) return false;
+            foreach (string s in d.Keys)
+            {
+                if (s.Equals(title))
+                    return false;
             }
             return true;
         }
@@ -248,7 +253,5 @@ namespace Kanban.BL
             //Console.WriteLine(validateTaskInfo("dfd", "good", "04/04/2019", "10:41:02"));
             Console.ReadKey();
         }*/
-
-
     }
 }

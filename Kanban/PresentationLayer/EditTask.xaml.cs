@@ -29,7 +29,7 @@ namespace Kanban.PresentationLayer
             InitializeComponent();
 
             this.task = task;
-            Service service = new Service();
+            UserService service = new UserService();
             this.user = service.GetUser(user);
             this.VM = new TaskContext(task,user); //format the VM
             this.email = user;
@@ -38,7 +38,12 @@ namespace Kanban.PresentationLayer
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if(!VM.EditTask(task)) MessageBox.Show("There is a problem with the things you entered");
+            if (!VM.EditTask(task)) MessageBox.Show("There is a problem with the things you entered");
+            else {
+                KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
+                kanban.Show();
+                Close();
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -46,6 +51,10 @@ namespace Kanban.PresentationLayer
             KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
             kanban.Show();
             Close();
+        }
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            if (!VM.PromoteTask()) MessageBox.Show("There is a problem with the things you entered");
         }
     }
 }

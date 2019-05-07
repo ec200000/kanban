@@ -29,7 +29,7 @@ namespace Kanban.PresentationLayer
             InitializeComponent();
 
             this.task = task;
-            Service service = new Service();
+            UserService service = new UserService();
             this.user = service.GetUser(user);
             this.VM = new TaskContext(task,user); //format the VM
             this.email = Name;

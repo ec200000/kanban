@@ -1,4 +1,4 @@
-﻿using Kanban.BL;
+﻿using Kanban.PresentationLayer.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,34 +15,38 @@ using System.Windows.Shapes;
 
 namespace Kanban.PresentationLayer
 {
-    public partial class Login : Window
+    /// <summary>
+    /// Interaction logic for ReplaceColumns.xaml
+    /// </summary>
+    public partial class ReplaceColumns : Window
     {
-        UserWindowDataContext VM;
-
-        public Login()
+        BoardWindowDataContext VM;
+        string email;
+        public ReplaceColumns(string user)
         {
             InitializeComponent();
-
-            this.VM = new UserWindowDataContext(); //format the VM
-
+            this.VM = new BoardWindowDataContext(user); //format the VM
             this.DataContext = this.VM;
-
+            this.email = user;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            User user = VM.Login();
-            string email = VM.Email;
-            if (user!=null)//checking if the login succeed
+            bool b = VM.ReplaceColumns();
+            if (!b) MessageBox.Show("There is a problem with the things you entered");
+            else
             {
                 KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
                 kanban.Show();
                 Close();
             }
-            else
-            {
-                MessageBox.Show("Wrong Email and/or Password");
-            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
+            kanban.Show();
+            Close();
         }
     }
 }

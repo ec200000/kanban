@@ -30,7 +30,7 @@ namespace Kanban.PresentationLayer
         {
             InitializeComponent();
 
-            Service service = new Service();
+            UserService service = new UserService();
             this.user = service.GetUser(user);
             this.VM = new TaskContext(user); //format the VM
             this.DataContext = this.VM;
@@ -41,6 +41,12 @@ namespace Kanban.PresentationLayer
         {
             bool b = VM.CreateTask();
             if (!b) MessageBox.Show("There is a problem with the things you entered");
+            else
+            {
+                KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
+                kanban.Show();
+                Close();
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)

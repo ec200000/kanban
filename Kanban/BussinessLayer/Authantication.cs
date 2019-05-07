@@ -1,5 +1,4 @@
-
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -12,16 +11,16 @@ namespace Kanban.BL
     [Serializable]
     class Authantication
     {
-        public static Dictionary<string,User> userRegisterd = new Dictionary<string, User>();
+        public static Dictionary<string, User> userRegisterd = new Dictionary<string, User>();
         public static Validation v = new Validation();
 
-        public User signUp(string email, string password)
+        public static User signUp(string email, string password)
         {
             if (v.validateUserInfo(email, password))
             {
-                User newUser = new User(email, password,new Board(), false);
+                User newUser = new User(email, password, new Board(), false);
                 userRegisterd = FileLogger.Read();
-                if(userRegisterd == null)
+                if (userRegisterd == null)
                 {
                     userRegisterd = new Dictionary<string, User>();
                 }
@@ -34,9 +33,9 @@ namespace Kanban.BL
             return null;
         }
 
-        public User login(string email, string password)
+        public static User login(string email, string password)
         {
-            if (v.validateCredentials(email,password))
+            if (v.validateCredentials(email, password))
             {
                 try
                 {
@@ -46,12 +45,13 @@ namespace Kanban.BL
                     string msg = email + " logged in to the system";
                     FileLogger.WriteInformationToLog(msg);
                     return userInSystem;
-                }catch(Exception ex) //when we will write the UI it will apear on the user's screen
+                }
+                catch (Exception ex) //when we will write the UI it will apear on the user's screen
                 {
                     Log.Error(ex, "exception in login function");
                     MessageBox.Show(ex.Message);
                 }
-                
+
             }
             return null;
         }
@@ -59,7 +59,7 @@ namespace Kanban.BL
         public static void logOut(User userToLogOut)
         {
             userToLogOut.isconnected = false;
-            string msg = userToLogOut.getEmail() + " logged out from the to the system";
+            string msg = userToLogOut.GetEmail() + " logged out from the to the system";
             FileLogger.WriteInformationToLog(msg);
         }
     }

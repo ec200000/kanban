@@ -1,4 +1,5 @@
 ﻿using Kanban.BL;
+using Kanban.InterfaceLayer;
 using System;
 using System.ComponentModel;
 
@@ -38,15 +39,22 @@ class UserWindowDataContext : INotifyPropertyChanged
 
     public User Login()
     {
-        Authantication auth = new Authantication();
-        User user = auth.login(email, pwd);
-        return user;
+        UserService auth = new UserService();
+        bool b = auth.login(email, pwd);
+        if (b) {
+            User user = auth.GetUser(email);
+            return user;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public bool SignUp() {
-        Authantication auth = new Authantication();
-        User user = auth.signUp(email, pwd);
-        return user != null;
+        UserService auth = new UserService();
+        bool user = auth.signUp(email, pwd);
+        return user;
     }
 
 }

@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
+using Kanban.PresentationLayer.ViewModel;
 
 namespace Kanban.BL
 {
@@ -28,12 +29,13 @@ namespace Kanban.BL
         public bool CreateTask(string title, string description, string dueDate, string currCol)
         {
             Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
+            //kanbancolumns.First();
             Validation val = new Validation();
             Column col = kanbancolumns[currCol];
             if (val.validateTaskInfo(title, description, dueDate) & val.checkSpaceInColumn(col)) //checks if the task info is vaild and if there is space for another task in the column and create new task
             {
-                Task task = new Task(title, description, dueDate,currCol);
-                if(!val.checkCreationTimeExsictence(task.GetCreationTime()))//after creating task checking that it has creation time
+                Task task = new Task(title, description, dueDate, currCol);
+                if (!val.checkCreationTimeExsictence(task.GetCreationTime()))//after creating task checking that it has creation time
                 {
                     FileLogger.WriteErrorToLog("no creation time in new task");
                     return false;
@@ -51,24 +53,87 @@ namespace Kanban.BL
             }
         }
 
-        public bool CreateColumn(string title)
+        public bool RemoveColumn(string colToRemove)
         {
-            Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
-            Validation val = new Validation();
-            if (val.validateColumnInfo(title,kanbancolumns)) {
-                KanBanBoard.boardColumns.Add(title, new Column());
-                FileLogger.write(Authantication.userRegisterd); //update dictionary
-                return true;
-            }
-            else
+            if (KanBanBoard.boardColumns.Count == 0)//there are no columns to erase
             {
                 return false;
             }
+            try
+            {
+                KanBanBoard.columnsOrder.Remove(colToRemove);
+                KanBanBoard.boardColumns.Remove(colToRemove);
+                FileLogger.write(Authantication.userRegisterd); //update dictionary
+            }
+            catch (Exception ex)
+            {
+                FileLogger.WriteErrorToLog(ex + "in removeColumn function");
+                return false;
+            }
+            return true;
+        }
+
+        public bool addNewColumnToBoard(string colBefore, string newCol)
+        {
+            try
+            {
+                if (KanBanBoard.boardColumns.ContainsKey(newCol))//can't add column with the same name
+                {
+                    FileLogger.WriteErrorToLog("can't create column because there is already one with the same name!");
+                    return false;
+                }
+                if (colBefore.ToLower().Equals("empty")|| colBefore.Equals(""))//if the user wants to create a first new column
+                {
+                    KanBanBoard.columnsOrder.AddFirst(newCol);
+                    KanBanBoard.boardColumns.Add(newCol, new Column());
+                    FileLogger.write(Authantication.userRegisterd); //update dictionary
+                }
+                else
+                {
+                    LinkedListNode<string> colBeforeNode = KanBanBoard.columnsOrder.Find(colBefore);
+                    if (colBeforeNode == null)//couldn't find the column that the user entered
+                    {
+                        FileLogger.WriteNullObjectExceptionToLogger<string>("function addNewColumnToBoard");
+                        return false;
+                    }
+                    KanBanBoard.columnsOrder.AddAfter(colBeforeNode, newCol);
+                    KanBanBoard.boardColumns.Add(newCol, new Column());
+                    FileLogger.write(Authantication.userRegisterd); //update dictionary
+                }
+
+            }
+            catch (Exception ex)
+            {
+                FileLogger.WriteErrorToLog(ex + " in adaddNewColumnToBoard");
+                return false;
+            }
+            return true;
+        }
+
+        public bool swapColumnsPosition(string colBefore, string colToMove)
+        {
+            try
+            {
+                if (colToMove == null | colBefore == null)
+                {
+                    FileLogger.WriteNullObjectExceptionToLogger<string>("swapColumnsPosition function");
+                    return false;
+                }
+                RemoveColumn(colToMove);
+                addNewColumnToBoard(colBefore, colToMove);
+            }
+            catch (Exception ex)
+            {
+                FileLogger.WriteErrorToLog(ex + "in swapColumnsPosition function");
+                return false;
+            }
+
+            return true;
         }
 
         public bool PromoteTaskToNextPhase(Task task, string source, string target)
         {
-            if(task != null)
+            if (task != null)
             {
                 Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
                 Validation val = new Validation();
@@ -97,13 +162,13 @@ namespace Kanban.BL
             }
             else
             {
-                FileLogger.WriteNullObjectExceptionToLogger<Task>("PromoteTaskToNextPhase function"); 
+                FileLogger.WriteNullObjectExceptionToLogger<Task>("PromoteTaskToNextPhase function");
             }
             return false; //if the task is in last column there is no next column 
 
         }
 
-        public string getEmail()
+        public string GetEmail()
         {
             return this.userEmail;
         }
@@ -128,8 +193,8 @@ namespace Kanban.BL
                         currentColumn = kanbancolumns[currCol];
 
                         kanbancolumns.Remove(currCol); //remove previous column
-                        Task[] tasks = currentColumn.getTasks();
-                        tasks[index].SetDescription(newDes); //update task
+                        List<Task> tasks = currentColumn.getTasks();
+                        tasks.ElementAt(index).SetDescription(newDes); //update task
                         kanbancolumns.Add(currCol, currentColumn); //add new column
                         FileLogger.write(Authantication.userRegisterd); //write to file
                         return true;
@@ -163,8 +228,8 @@ namespace Kanban.BL
                     {
                         currentColumn = kanbancolumns[currCol];
                         kanbancolumns.Remove(currCol); //remove previous column
-                        Task[] tasks = currentColumn.getTasks();
-                        tasks[index].SetTitle(newTitle); //update task
+                        List<Task> tasks = currentColumn.getTasks();
+                        tasks.ElementAt(index).SetTitle(newTitle); //update task
                         kanbancolumns.Add(currCol, currentColumn); //add new column
                         FileLogger.write(Authantication.userRegisterd); //write to file 
                         return true;
@@ -198,8 +263,8 @@ namespace Kanban.BL
                     {
                         currentColumn = kanbancolumns[currCol];
                         kanbancolumns.Remove(currCol); //remove previous column
-                        Task[] tasks = currentColumn.getTasks();
-                        tasks[index].SetDueDate(newDate); //update task
+                        List<Task> tasks = currentColumn.getTasks();
+                        tasks.ElementAt(index).SetDueDate(newDate); //update task
                         kanbancolumns.Add(currCol, currentColumn); //add new column
                         FileLogger.write(Authantication.userRegisterd);
                         return true;
@@ -262,5 +327,11 @@ namespace Kanban.BL
                 return false;
             }
         }
+
+        public string getNextColumn(string currCol)
+        {
+            return this.KanBanBoard.columnsOrder.Find(currCol).Next.Value;
+        }
+
     }
 }

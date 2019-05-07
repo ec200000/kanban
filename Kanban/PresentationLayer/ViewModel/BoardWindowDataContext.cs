@@ -12,10 +12,12 @@ namespace Kanban.PresentationLayer.ViewModel
     public class BoardWindowDataContext : INotifyPropertyChanged
     {
         User user;
+        string username;
         public BoardWindowDataContext(string user)
         {
-            Service service = new Service();
+            UserService service = new UserService();
             this.user = service.GetUser(user);
+            this.username = user;
             ShowTheard(this.user);
         }
 
@@ -80,12 +82,11 @@ namespace Kanban.PresentationLayer.ViewModel
                     PropertyChanged(this, new PropertyChangedEventArgs("Columns"));
             }
         }
-        void ShowTheard(User user)
+        public void ShowTheard(User user)
         {
             BindableCollection<BoardWindowTask> tasks = new BindableCollection<BoardWindowTask>();
-            foreach (string col in user.KanBanBoard.boardColumns)
+            foreach (Column col in user.KanBanBoard.boardColumns.Values)
             {
-                Column col = user.KanBanBoard.boardColumns[colName];
                 foreach (Task t in col.getTasks())
                 {
                     if (t != null)
@@ -96,10 +97,15 @@ namespace Kanban.PresentationLayer.ViewModel
             Tasks = tasks;
         }
 
-        private void UpdateFilter()
+        public void UpdateFilter()
         {
             CollectionViewSource cvs = new CollectionViewSource() { Source = tasks };
             ICollectionView cv = cvs.View;
+            cv.Filter = o =>
+            {
+                BoardWindowTask p = o as BoardWindowTask;
+                return (p.Title.ToUpper().Contains(SearchTerm.ToUpper()) & p.Description.ToUpper().Contains(SearchTerm.ToUpper()));
+            };
             GridView = cv;
         }
 
@@ -120,9 +126,34 @@ namespace Kanban.PresentationLayer.ViewModel
 
         public bool CreateColumn() {
             Validation val = new Validation();
+            UserService service = new UserService();
             if (val.validateColumnInfo(Column,user.KanBanBoard.boardColumns))
             {
-                user.CreateColumn(Column);
+                service.CreateColumn(username, PrevColumn,Column);
+                return true;
+            }
+            else
+                return false;
+        }
+
+        string prevcolumn = "";
+        public string PrevColumn
+        {
+            get
+            {
+                return prevcolumn;
+            }
+            set
+            {
+                prevcolumn = value;
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs("PrevColumn"));
+            }
+        }
+
+        public bool ReplaceColumns()
+        {
+            if (user.swapColumnsPosition(Column, PrevColumn)){ 
                 return true;
             }
             else

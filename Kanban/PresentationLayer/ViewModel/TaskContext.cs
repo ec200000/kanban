@@ -10,6 +10,7 @@ namespace Kanban.PresentationLayer.ViewModel
     public class TaskContext : INotifyPropertyChanged
     {
         User user;
+        string username;
 
         string title = "";
         public string Title {
@@ -96,13 +97,14 @@ namespace Kanban.PresentationLayer.ViewModel
             this.DueDate = task.dueDate;
             this.CreationTime = task.creationTime;
             this.Description = task.description;
-            Service service = new Service();
+            UserService service = new UserService();
             this.user = service.GetUser(user);
+            this.username = user;
         }
 
         public TaskContext(string user)
         {
-            Service service = new Service();
+            UserService service = new UserService();
             this.user = service.GetUser(user);
         }
 
@@ -128,9 +130,21 @@ namespace Kanban.PresentationLayer.ViewModel
             Validation val = new Validation();
             if (val.validateTaskInfo(Title, Description, DueDate))
             {
-                user.CreateTask(Title, Description, DueDate, Column);
-                return true;
+                UserService service = new UserService();
+                if(service.CreateTask(Title, Description, DueDate, Column))
+                    return true;
+                else
+                    return false;
             }
+            else
+                return false;
+
+        }
+        public bool PromoteTask()
+        {
+            UserService service = new UserService();
+            if(service.PromoteTaskToNextPhase(username,this))
+                return true;
             else
                 return false;
 

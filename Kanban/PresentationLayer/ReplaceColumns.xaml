@@ -1,14 +1,14 @@
-﻿<Window x:Class="Kanban.PresentationLayer.ViewModel.NewColumn"
+﻿<Window x:Class="Kanban.PresentationLayer.ReplaceColumns"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Kanban.PresentationLayer.ViewModel"
+        xmlns:local="clr-namespace:Kanban.PresentationLayer"
         mc:Ignorable="d"
-        Title="NewColumn" Height="250" Width="400">
+        Title="ReplaceColumns" Height="250" Width="400">
     <Grid Background="#FFFFFB81">
         <TextBox Name ="column" Text="{Binding Column}" HorizontalAlignment="Left" Height="26" Margin="160,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="186"/>
-        <Button Content="CREATE" HorizontalAlignment="Left" Margin="142,139,0,0" Background="#FFFEFF9F" VerticalAlignment="Top" Width="75" Click="Button_Click" FontSize="20"/>
+        <Button Content="REPLACE" HorizontalAlignment="Left" Margin="142,139,0,0" Background="#FFFEFF9F" VerticalAlignment="Top" Width="97" Click="Button_Click" FontSize="20"/>
         <Button Content="RETURN" VerticalAlignment="Top" Height="30" Width="110" Background="{x:Null}" Click="Button_Click_1" FontSize="20" BorderBrush="{x:Null}" Margin="0,0,283.6,0"/>
         <Label Content="new column's name" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top"/>
         <Label Content="previous column's name" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>

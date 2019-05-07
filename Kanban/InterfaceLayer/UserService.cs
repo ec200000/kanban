@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kanban.InterfaceLayer
 {
-    public class Service
+    public class UserService
     {
         public User GetUser(string userName)
         {
@@ -23,10 +23,9 @@ namespace Kanban.InterfaceLayer
 
         public bool login(string Username, string Password)
         {
-            Authantication auth = new Authantication();
             try
             {
-                if (auth.login(Username, Password) != null)
+                if (Authantication.login(Username, Password) != null)
                 {
                     return true;
                 }
@@ -35,7 +34,7 @@ namespace Kanban.InterfaceLayer
                     FileLogger.WriteErrorToLog(Username + " unable to login");
                     return false;
                 }
-                    
+
             }
             catch (Exception ex)
             {
@@ -46,10 +45,9 @@ namespace Kanban.InterfaceLayer
 
         public bool signUp(string Username, string Password)
         {
-            Authantication auth = new Authantication();
             try
             {
-                if (auth.signUp(Username, Password) != null)
+                if (Authantication.signUp(Username, Password) != null)
                 {
                     return true;
                 }
@@ -74,18 +72,19 @@ namespace Kanban.InterfaceLayer
             return user.CreateTask(title, description, dueDate, currCol);
         }
 
-        public bool CreateColumn(string userName, string title)
+        //newCol,prvCol we get from the user in the create New column screen
+        public bool CreateColumn(string userName, string newCol, string prvCol)
         {
             User user = GetUser(userName);
-            return user.CreateColumn(title);
+            return user.addNewColumnToBoard(prvCol, newCol);
         }
 
-        public bool PromoteTaskToNextPhase(string userName,TaskContext currTask)
+        public bool PromoteTaskToNextPhase(string userName, TaskContext currTask)
         {
             User user = GetUser(userName);
             string currCol = currTask.Column;
             string targetCol = user.KanBanBoard.columnsOrder.Find(currCol).Next.Value;
-            if(targetCol == null)
+            if (targetCol == null)
             {
                 FileLogger.WriteErrorToLog("the task is in the last column - can't promote the task!");
                 return false;

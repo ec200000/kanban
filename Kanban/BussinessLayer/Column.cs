@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,21 +8,28 @@ namespace Kanban.BL
 {
     public class Column
     {
-        private const int MAX_TASKS_IN_COLUMN = 5;
+        //private const int MAX_TASKS_IN_COLUMN = 5;
+        public int maxNumOfTaskInColumn;
+        public List<Task> tasks;
 
-        public Task[] tasks;
-
-        public Column(Task[] tasks)
+        public Column(List<Task> tasks)
         {
+            this.maxNumOfTaskInColumn = int.MaxValue;//the default is infinity
             this.tasks = tasks;
         }
 
         public Column()
         {
-            this.tasks = new Task[MAX_TASKS_IN_COLUMN];
+            this.maxNumOfTaskInColumn = int.MaxValue;
+            this.tasks = new List<Task>();
         }
 
-        public Task[] getTasks()
+        public void setMaxNumOfTaskInColumn(int newLimit)
+        {
+            this.maxNumOfTaskInColumn = newLimit;
+        }
+
+        public List<Task> getTasks()
         {
             return tasks;
         }
@@ -30,114 +37,88 @@ namespace Kanban.BL
         public bool AddTask(Task task) //add a task to the column
         {
             int empty = GetNumOfTasks();
-            int index = -1;
-            if (empty == MAX_TASKS_IN_COLUMN) return false; //if the number of tasks is 5
+            if (empty == maxNumOfTaskInColumn)//reached the limit
+            {
+                FileLogger.WriteErrorToLog("no more space to add the task - " + task.GetTitle() + "in the " + task.GetCurrentColumn() + " column");
+                return false;
+            }
             else
             {
-                for (int i = 0; i < MAX_TASKS_IN_COLUMN & index < 0; i++)
-                {
-                    if (tasks[i] == null)
-                    {
-                        index = i;
-                    }
-                }
-                tasks[index] = task; //entering the task in the index index
+                this.tasks.Add(task);
                 return true;
             }
         }
         public int GetNumOfTasks()
         {
-            int counter = 0;
-            for (int i = 0; i < MAX_TASKS_IN_COLUMN; i++)
-            {
-                if (tasks[i] != null)
-                {
-                    counter++; //counting number of tasks
-                }
-            }
-            return counter;
+            return this.tasks.Count;
         }
 
         public void SortByDueDate()
         {
             string[] arr = new string[GetNumOfTasks()];
             int[] indexes = new int[GetNumOfTasks()];
-            Task[] temp = new Task[MAX_TASKS_IN_COLUMN];
+            List<Task> temp = new List<Task>();
             for (int i = 0; i < arr.Length; i++)
             {
-                arr[i] = tasks[i].GetDueDate();
+                if (tasks.ElementAt(i) != null)
+                    arr[i] = tasks.ElementAt(i).GetDueDate();
             }
             Array.Sort(arr);
             for (int i = 0; i < arr.Length; i++)
             {
                 for (int j = 0; j < arr.Length; j++)
                 {
-                    if (arr[i].Equals(tasks[j].GetDueDate())) indexes[i] = j;
+                    if (tasks.ElementAt(j) != null)
+                        if (arr[i].Equals(tasks.ElementAt(j).GetDueDate()))
+                            indexes[i] = j;
                 }
             }
             for (int j = 0; j < arr.Length; j++)
             {
-                temp[j] = tasks[indexes[j]];
+                temp.Insert(j, tasks.ElementAt(indexes[j]));
             }
             tasks = temp;
         }
 
         public bool RemoveTask(Task task)
         {
-            bool exist = false;
-            for (int i = 0; i < MAX_TASKS_IN_COLUMN & !exist; i++)
+            if (!this.tasks.Remove(task))//if task doesn't exist
             {
-                if (tasks[i] != null && tasks[i].Equals(task)) //if the task exists
-                {
-                    Task[] copy = new Task[MAX_TASKS_IN_COLUMN];
-                    for (int j = 0; j < i; j++)
-                    {
-                        copy[j] = tasks[j];
-                    }
-
-                    for (int j = i; j < MAX_TASKS_IN_COLUMN - 1; j++)
-                    {
-                        copy[j] = tasks[j + 1];
-                    }
-                    tasks = copy; //removing the task and creating an array without it
-                    return true;
-                }
+                FileLogger.WriteErrorToLog("Can't earse the task because it does not exist!");
+                return false;
             }
-            return false; //if task doesn't exist
+            return true;
+
         }
         public void SortByCreationTime()
         {
             string[] arr = new string[GetNumOfTasks()];
             int[] indexes = new int[GetNumOfTasks()];
-            Task[] temp = new Task[MAX_TASKS_IN_COLUMN];
+            List<Task> temp = new List<Task>();
             for (int i = 0; i < arr.Length; i++)
             {
-                arr[i] = tasks[i].GetCreationTime();
+                if(tasks.ElementAt(i)!=null)
+                    arr[i] = tasks.ElementAt(i).GetCreationTime();
             }
             Array.Sort(arr);
             for (int i = 0; i < arr.Length; i++)
             {
                 for (int j = 0; j < arr.Length; j++)
                 {
-                    if (arr[i].Equals(tasks[j].GetCreationTime())) indexes[i] = j;
+                    if (tasks.ElementAt(j) != null)
+                        if (arr[i].Equals(tasks.ElementAt(j).GetCreationTime()))
+                            indexes[i] = j;
                 }
             }
             for (int j = 0; j < arr.Length; j++)
             {
-                temp[j] = tasks[indexes[j]];
+                temp.Insert(j, tasks.ElementAt(indexes[j]));
             }
             tasks = temp;
         }
-        public int IsTaskHere(Task task)
-        { //checking if a task is in this column
-            for (int i = 0; i < MAX_TASKS_IN_COLUMN; i++)
-            {
-                if (tasks[i].Equals(task)) //if the task is here
-                {
-                    return i;
-                }
-            }
-            return -1;
+        public int IsTaskHere(Task task)//checking if a task is in this column
+        {
+            return this.tasks.FindIndex(a => a.Equals(task));
         }
         public void Print()
         {

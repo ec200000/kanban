@@ -32,13 +32,14 @@ namespace Kanban.PresentationLayer
 
             VM = new BoardWindowDataContext(user);
             this.DataContext = VM;
-            Service service = new Service();
+            UserService service = new UserService();
             this.user = service.GetUser(user);
             this.email = user;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            user.DeleteTask(Tasks.SelectedItem);
+            TaskContext t = new TaskContext(email);
+            Tasks.Items.RemoveAt(Tasks.SelectedIndex);
         }
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
@@ -50,6 +51,50 @@ namespace Kanban.PresentationLayer
         {
             NewTask newTask = new NewTask(email);
             newTask.Show();
+            Close();
+        }
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            string x = Interaction.InputBox("Limit tasks number","Add number","THANK YOU",-1,-1);
+            char[] c = x.ToCharArray();
+            int n = c[0];
+            ColumnService service = new ColumnService();
+            service.SetMaxNumOfTaskInColumn(n, email);
+        }
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            string x = Interaction.InputBox("Remove column", "Enter column's name", "THANK YOU", -1, -1);
+            bool b = user.RemoveColumn(x);
+            if(b)
+                VM.ShowTheard(user);
+            else
+            {
+                MessageBox.Show("something went wrong");
+            }
+        }
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            VM.UpdateFilter();
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            ColumnService service = new ColumnService();
+            service.SortByDueDate(email);
+            VM.ShowTheard(user);
+        }
+
+        private void Button_Click_8(object sender, RoutedEventArgs e)
+        {
+            ColumnService service = new ColumnService();
+            service.SortByCreationTime(email);
+            VM.ShowTheard(user);
+        }
+
+        private void Button_Click_9(object sender, RoutedEventArgs e)
+        {
+            ReplaceColumns replace = new ReplaceColumns(email);
+            replace.Show();
             Close();
         }
     }
