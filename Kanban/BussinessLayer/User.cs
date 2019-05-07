@@ -6,6 +6,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
 using Kanban.PresentationLayer.ViewModel;
+using System.Windows;
 
 namespace Kanban.BL
 {
@@ -137,18 +138,18 @@ namespace Kanban.BL
             {
                 Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
                 Validation val = new Validation();
-                int index = kanbancolumns[source].IsTaskHere(task);
-                if (index != -1) //check if the task is in the column 
+                if (kanbancolumns[source].tasks.Find(t => t.Equals(task)) != null) //check if the task is in the column 
                 {
-
                     if (val.checkSpaceInColumn(kanbancolumns[target])) //if there is space in the next Column- promote task to the next one
                     {
+                        MessageBox.Show("here");
                         Column sourceCol = kanbancolumns[source];
                         sourceCol.RemoveTask(task); //remove task from source column
                         kanbancolumns.Remove(source); //remove previous column
                         sourceCol.SortByCreationTime();
                         kanbancolumns.Add(source, sourceCol); //add new column 
                         Column targetCol = kanbancolumns[target];
+                        task.currCol = target;
                         targetCol.AddTask(task);  //add task to target column
                         targetCol.SortByCreationTime();
                         kanbancolumns.Remove(target); //remove previous column
@@ -158,7 +159,7 @@ namespace Kanban.BL
                     }
                     else return false;//there is no space in the target column
                 }
-
+                else return false;
             }
             else
             {
@@ -228,8 +229,18 @@ namespace Kanban.BL
 
         public bool EditTask(Task oldTask, Task newTask, string currCol)
         {
-            return this.KanBanBoard.boardColumns[currCol].RemoveTask(oldTask) &&
-                                this.KanBanBoard.boardColumns[currCol].AddTask(newTask);
+            if (this.KanBanBoard.boardColumns[currCol].RemoveTask(oldTask) &&
+                                this.KanBanBoard.boardColumns[currCol].AddTask(newTask))
+            {
+                FileLogger.write(Authantication.userRegisterd); //write to file
+                return true;
+            }
+            else
+            {
+                FileLogger.WriteErrorToLog("couldn't edit the task - " + newTask.GetTitle() + " in column - " + currCol);
+            }
+            return false;
+
         }
     }
 }

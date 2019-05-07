@@ -54,7 +54,13 @@ namespace Kanban.PresentationLayer
         }
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            if (!VM.PromoteTask()) MessageBox.Show("There is a problem with the things you entered");
+            if (!VM.PromoteTask(task)) MessageBox.Show("There is a problem with the things you entered");
+            else
+            {
+                KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
+                kanban.Show();
+                Close();
+            }
         }
     }
 }

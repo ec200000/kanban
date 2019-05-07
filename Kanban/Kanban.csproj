@@ -102,6 +102,10 @@
     <Compile Include="BussinessLayer\Validation.cs" />
     <Compile Include="DataLayer\FileLogger.cs" />
     <Compile Include="InterfaceLayer\ColumnService.cs" />
+    <Compile Include="InterfaceLayer\InterfaceLayerBoard.cs" />
+    <Compile Include="InterfaceLayer\InterfaceLayerColumn.cs" />
+    <Compile Include="InterfaceLayer\InterfaceLayerTask.cs" />
+    <Compile Include="InterfaceLayer\InterfaceLayerUser.cs" />
     <Compile Include="InterfaceLayer\UserService.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

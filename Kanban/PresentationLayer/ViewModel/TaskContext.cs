@@ -140,10 +140,10 @@ namespace Kanban.PresentationLayer.ViewModel
                 return false;
 
         }
-        public bool PromoteTask()
+        public bool PromoteTask(Task task)
         {
             UserService service = new UserService();
-            if(service.PromoteTaskToNextPhase(username,this))
+            if(service.PromoteTaskToNextPhase(username,task))
                 return true;
             else
                 return false;

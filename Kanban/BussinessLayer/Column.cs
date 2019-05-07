@@ -61,7 +61,7 @@ namespace Kanban.BL
 
         public bool RemoveTask(Task task)
         {
-            if (!this.tasks.Remove(task))//if task doesn't exist
+            if (!this.tasks.Remove(this.tasks.Find(t => t.Equals(task))))//if task doesn't exist
             {
                 FileLogger.WriteErrorToLog("Can't earse the task because it does not exist!");
                 return false;

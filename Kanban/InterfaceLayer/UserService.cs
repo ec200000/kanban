@@ -79,17 +79,16 @@ namespace Kanban.InterfaceLayer
             return user.addNewColumnToBoard(prvCol, newCol);
         }
 
-        public bool PromoteTaskToNextPhase(string userName, TaskContext currTask)
+        public bool PromoteTaskToNextPhase(string userName, BL.Task task)
         {
             User user = GetUser(userName);
-            string currCol = currTask.Column;
+            string currCol = task.currCol;
             string targetCol = user.KanBanBoard.columnsOrder.Find(currCol).Next.Value;
             if (targetCol == null)
             {
                 FileLogger.WriteErrorToLog("the task is in the last column - can't promote the task!");
                 return false;
             }
-            BL.Task task = new BL.Task(currTask.Title, currTask.Description, currTask.DueDate, currCol);
             return user.PromoteTaskToNextPhase(task, currCol, targetCol);
         }
 

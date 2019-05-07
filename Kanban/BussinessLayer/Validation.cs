@@ -15,7 +15,6 @@ namespace Kanban.BL
     {
         private const int DESCRIPTION_LENGTH = 30;
         private const int TITLE_LENGTH = 50;
-        private const int MAX_TASKS_IN_COLUMN = 5;
         private const int MAX_PASSWORD_LENGTH = 20;
         private const int MIN_PASSWORD_LENGTH = 4;
 
@@ -217,7 +216,7 @@ namespace Kanban.BL
         //if there is space for it
         public bool checkSpaceInColumn(Column column)
         {
-            if (column == null || column.GetNumOfTasks() == MAX_TASKS_IN_COLUMN)
+            if (column == null || column.GetNumOfTasks() == column.maxNumOfTaskInColumn)
             {
                 FileLogger.WriteErrorToLog("There is no space in the column!");
                 return false;
