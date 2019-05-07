@@ -129,7 +129,7 @@ namespace Kanban.PresentationLayer.ViewModel
             if (val.validateTaskInfo(Title, Description, DueDate))
             {
                 UserService service = new UserService();
-                if(service.CreateTask(Title, Description, DueDate, Column))
+                if(service.CreateTask(username, Title, Description, DueDate))
                     return true;
                 else
                     return false;
