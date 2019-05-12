@@ -40,7 +40,7 @@ namespace Kanban
             }
         }
 
-        private void Button_Click2(object sender, RoutedEventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Login login = new Login(); //opening the login window
             login.Show();

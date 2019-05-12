@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace Kanban.InterfaceLayer
 {
-    class InterfaceLayerTask
+    public class InterfaceLayerTask
     {
         public string Title { get; private set; }
         public string Description { get; private set; }
-        public string DueDate { get; private set; }
+        public DateTime DueDate { get; private set; }
         public string CreationTime { get; private set; }
         public string CurrCol { get; private set; }
 
-        public InterfaceLayerTask(string title, string description, string duedate, string creationtime, string currcol)
+        public InterfaceLayerTask(string title, string description, DateTime duedate, string creationTime, string currCol)
         {
             this.Title = title;
             this.Description = description;
             this.DueDate = duedate;
-            this.CreationTime = creationtime;
-            this.CurrCol = currcol;
+            this.CreationTime = creationTime;
+            this.CurrCol = currCol;
         }
     }
 }

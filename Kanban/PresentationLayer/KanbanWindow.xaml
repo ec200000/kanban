@@ -8,14 +8,14 @@
         Title="KanbanWindow" Height="450" Width="800">
     <Grid>
         <DataGrid x:Name="Tasks" ItemsSource="{Binding GridView, Mode=OneWay}" SelectedItem="{Binding Selected}" HorizontalAlignment="Left" Height="320" Margin="10,50,0,0" VerticalAlignment="Top" Width="774" Background="#FFFFFBC8" BorderBrush="#FFC0AB23" MouseDoubleClick="Data_MouseDoubleClick"/>
-        <Button Content="Create A New Column" HorizontalAlignment="Left" Margin="475,10,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_2" Grid.Column="1"/>
-        <Button Content="Create A New Task" HorizontalAlignment="Left" Margin="635,10,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_3" Grid.Column="1"/>
-        <Button Content="Limit Tasks Number" HorizontalAlignment="Left" Margin="193,391,0,0" VerticalAlignment="Top" Height="19" Width="110" Background="#FFFEFF9F" Click="Button_Click_4"/>
+        <Button Content="Create A New Column" HorizontalAlignment="Left" Margin="475,10,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_NewCol"/>
+        <Button Content="Create A New Task" HorizontalAlignment="Left" Margin="635,10,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_NewTask" Grid.Column="1"/>
+        <Button Content="Limit Tasks Number" HorizontalAlignment="Left" Margin="193,391,0,0" VerticalAlignment="Top" Height="19" Width="110" Background="#FFFEFF9F" Click="Button_Click_Limit"/>
         <TextBox x:Name="textBoxFilter" HorizontalAlignment="Left" Height="21" Margin="30,10,0,0" TextWrapping="Wrap" Text="{Binding SearchTerm, Mode=OneWayToSource}" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Remove Column" HorizontalAlignment="Left" Margin="335,391,0,0" VerticalAlignment="Top" Height="19" Width="110" Background="#FFFEFF9F" Click="Button_Click_5"/>
-        <Button Content="Filter" HorizontalAlignment="Left" Margin="193,10,0,0" VerticalAlignment="Top" Height="19" Width="110" Background="#FFFEFF9F" Click="Button_Click_6"/>
-        <Button Content="Sort By Due Date" HorizontalAlignment="Left" Margin="475,391,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_7"/>
-        <Button Content="Sort By Creation Time" HorizontalAlignment="Left" Margin="635,391,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_8"/>
-        <Button Content="Replace Columns" HorizontalAlignment="Left" Margin="324,10,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_9"/>
+        <Button Content="Remove Column" HorizontalAlignment="Left" Margin="335,391,0,0" VerticalAlignment="Top" Height="19" Width="110" Background="#FFFEFF9F" Click="Button_Click_Remove"/>
+        <Button Content="Filter" HorizontalAlignment="Left" Margin="193,10,0,0" VerticalAlignment="Top" Height="19" Width="110" Background="#FFFEFF9F" Click="Button_Click_Filter"/>
+        <Button Content="Sort By Due Date" HorizontalAlignment="Left" Margin="475,391,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_DueDate"/>
+        <Button Content="Sort By Creation Time" HorizontalAlignment="Left" Margin="635,391,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_Creation"/>
+        <Button Content="Replace Columns" HorizontalAlignment="Left" Margin="324,10,0,0" VerticalAlignment="Top" Height="19" Width="130" Background="#FFFEFF9F" Click="Button_Click_Replace"/>
     </Grid>
 </Window>

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using Kanban.BL;
+using Kanban.InterfaceLayer;
 
 namespace Kanban.PresentationLayer.ViewModel
 {
@@ -86,13 +87,13 @@ namespace Kanban.PresentationLayer.ViewModel
                     PropertyChanged(this, new PropertyChangedEventArgs("CreationTime"));
             }
         }
-        public BoardWindowTask(Task task)
+        public BoardWindowTask(InterfaceLayerTask task)
         {
-            this.Title = task.title;
-            this.Column = task.currCol;
-            this.DueDate = task.dueDate;
-            this.CreationTime = task.creationTime;
-            this.Description = task.description;
+            this.Title = task.Title;
+            this.Column = task.CurrCol;
+            this.DueDate = task.DueDate;
+            this.CreationTime = task.CreationTime;
+            this.Description = task.Description;
         }
 
     }

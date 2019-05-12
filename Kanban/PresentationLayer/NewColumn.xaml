@@ -8,11 +8,12 @@
         Title="NewColumn" Height="250" Width="400">
     <Grid Background="#FFFFFB81">
         <TextBox Name ="column" Text="{Binding Column}" HorizontalAlignment="Left" Height="26" Margin="160,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="186"/>
-        <Button Content="CREATE" HorizontalAlignment="Left" Margin="142,139,0,0" Background="#FFFEFF9F" VerticalAlignment="Top" Width="75" Click="Button_Click" FontSize="20"/>
-        <Button Content="RETURN" VerticalAlignment="Top" Height="30" Width="110" Background="{x:Null}" Click="Button_Click_1" FontSize="20" BorderBrush="{x:Null}" Margin="0,0,283.6,0"/>
+        <Button Content="CREATE" HorizontalAlignment="Left" Margin="146,151,0,0" Background="#FFFEFF9F" VerticalAlignment="Top" Width="75" Click="Button_Click_Create" FontSize="20"/>
+        <Button Content="RETURN" VerticalAlignment="Top" Height="30" Width="110" Background="{x:Null}" Click="Button_Click_Back" FontSize="20" BorderBrush="{x:Null}" Margin="0,0,283.6,0"/>
         <Label Content="new column's name" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top"/>
         <Label Content="previous column's name" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
         <TextBox Name ="prevcolumn" Text="{Binding PrevColumn}" HorizontalAlignment="Left" Height="26" Margin="160,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="186"/>
+        <TextBlock HorizontalAlignment="Left" Margin="36,121,0,0" TextWrapping="Wrap" Text="if you want the new column to be first just enter 'empty'" VerticalAlignment="Top" Width="336"/>
 
     </Grid>
 </Window>

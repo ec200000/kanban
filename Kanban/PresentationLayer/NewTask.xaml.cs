@@ -23,7 +23,7 @@ namespace Kanban.PresentationLayer
     public partial class NewTask : Window
     {
         TaskContext VM;
-        User user;
+        InterfaceLayerUser user;
         string email;
 
         public NewTask(string user)
@@ -37,7 +37,7 @@ namespace Kanban.PresentationLayer
             this.email = user;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_Click_Save(object sender, RoutedEventArgs e)
         {
             bool b = VM.CreateTask();
             if (!b) MessageBox.Show("There is a problem with the things you entered");
@@ -49,7 +49,7 @@ namespace Kanban.PresentationLayer
             }
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Button_Click_Back(object sender, RoutedEventArgs e)
         {
             KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
             kanban.Show();

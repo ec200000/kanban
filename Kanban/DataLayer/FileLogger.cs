@@ -1,5 +1,4 @@
-
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using System;
@@ -12,22 +11,22 @@ namespace Kanban.BL
 {
     class FileLogger
     {
-        public static void write(Dictionary<string,User> dictionary)
+        public static void write(Dictionary<string, User> dictionary)
         {
-                string path = Directory.GetCurrentDirectory() + "\\UserData.txt";
-            
-                if (File.Exists(path))
-                {
-                    File.WriteAllText(path, string.Empty);
-                    string json = JsonConvert.SerializeObject(dictionary);
-                    File.WriteAllText(path, json);
-                }
-                else
-                {
-                WriteErrorToLog("error in Write function");
-                }
+            string path = Directory.GetCurrentDirectory() + "\\UserData.txt";
 
-            
+            if (File.Exists(path))
+            {
+                File.WriteAllText(path, string.Empty);
+                string json = JsonConvert.SerializeObject(dictionary);
+                File.WriteAllText(path, json);
+            }
+            else
+            {
+                WriteErrorToLog("error in Write function");
+            }
+
+
         }
 
         //this function reads from a file
@@ -35,20 +34,22 @@ namespace Kanban.BL
         {
             try
             {
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                settings.ObjectCreationHandling = ObjectCreationHandling.Replace;//to stop duplicate the linked list
                 string path = Directory.GetCurrentDirectory() + "\\UserData.txt";
                 Dictionary<string, User> usersDictionary =
                              JsonConvert.DeserializeObject<Dictionary<string, User>>
-                                                               (File.ReadAllText(path));
+                                                               (File.ReadAllText(path), settings);
                 return usersDictionary;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 WriteErrorToLog(ex.ToString() + " in Read function");
             }
 
-            return null;   
-           
-             
+            return null;
+
+
         }
 
         public static void WriteNullObjectExceptionToLogger<T>(string positionOfTheError)
@@ -64,22 +65,27 @@ namespace Kanban.BL
             {
                 Log.Error("the User is NULL in {0}!", positionOfTheError);
             }
-            else if(t == typeof(Task))
+            else if (t == typeof(Task))
             {
                 Log.Error("the Task is NULL in {0}!", positionOfTheError);
             }
-            else if(t == typeof(Column))
+            else if (t == typeof(Column))
             {
                 Log.Error("the Column is NULL in {0}!", positionOfTheError);
             }
+            else if (t == typeof(Board))
+            {
+
+                Log.Error("the Board is NULL in {0}!", positionOfTheError);
+            }
             else
             {
-                Log.Error("the Board is NULL in {0}!", positionOfTheError);
+                Log.Error("the String is NULL in {0}!", positionOfTheError);
             }
             Log.CloseAndFlush();
         }
 
-        public static void WriteInformationToLog (string info)
+        public static void WriteInformationToLog(string info)
         {
             Log.Logger = new LoggerConfiguration()
                      .WriteTo.RollingFile("LogFileError.txt", shared: true,

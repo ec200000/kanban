@@ -12,6 +12,6 @@
         <TextBox Name="emal" Text="{Binding Email}" HorizontalAlignment="Left" Height="23" Margin="132,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200"/>
         <TextBox Name="pswrd" Text="{Binding PWD}" HorizontalAlignment="Left" Height="23" Margin="132,122,0,0" VerticalAlignment="Top" Width="200"/>
         <Button Content="SignUp" HorizontalAlignment="Left" Margin="211,200,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Background="#FFE4D369" Foreground="Black"/>
-        <Button Content="already signed up? login here" HorizontalAlignment="Left" Margin="170,230,0,0" VerticalAlignment="Top" Click="Button_Click2" BorderBrush="{x:Null}" Foreground="Black" Background="{x:Null}"/>
+        <Button Content="already signed up? login here" HorizontalAlignment="Left" Margin="170,230,0,0" VerticalAlignment="Top" Click="Button_Click_1" BorderBrush="{x:Null}" Foreground="Black" Background="{x:Null}"/>
     </Grid>
 </Window>

@@ -97,7 +97,6 @@
     <Compile Include="BussinessLayer\Board.cs" />
     <Compile Include="BussinessLayer\Column.cs" />
     <Compile Include="BussinessLayer\Task.cs" />
-    <Compile Include="BussinessLayer\Tests.cs" />
     <Compile Include="BussinessLayer\User.cs" />
     <Compile Include="BussinessLayer\Validation.cs" />
     <Compile Include="DataLayer\FileLogger.cs" />

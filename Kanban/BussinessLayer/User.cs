@@ -56,13 +56,18 @@ namespace Kanban.BL
 
         public bool RemoveColumn(string colToRemove)
         {
+            bool ans = false;
             if (KanBanBoard.boardColumns.Count == 0)//there are no columns to erase
             {
-                return false;
+                return ans;
             }
             try
             {
-                KanBanBoard.columnsOrder.Remove(colToRemove);
+                ans = KanBanBoard.columnsOrder.Remove(colToRemove);
+                if(!ans)
+                {
+                    FileLogger.WriteErrorToLog("The name of the column that the user trying to earse does not appear on the board!");
+                }
                 KanBanBoard.boardColumns.Remove(colToRemove);
                 FileLogger.write(Authantication.userRegisterd); //update dictionary
             }
@@ -71,7 +76,7 @@ namespace Kanban.BL
                 FileLogger.WriteErrorToLog(ex + "in removeColumn function");
                 return false;
             }
-            return true;
+            return ans;
         }
 
         public bool addNewColumnToBoard(string colBefore, string newCol)
@@ -83,11 +88,16 @@ namespace Kanban.BL
                     FileLogger.WriteErrorToLog("can't create column because there is already one with the same name!");
                     return false;
                 }
-                if (colBefore.ToLower().Equals("empty"))//if the user wants to create a first new column
+                else if (colBefore.ToLower().Equals("empty"))//if the user wants to create a first new column
                 {
                     KanBanBoard.columnsOrder.AddFirst(newCol);
                     KanBanBoard.boardColumns.Add(newCol, new Column());
                     FileLogger.write(Authantication.userRegisterd); //update dictionary
+                }
+                else if (!KanBanBoard.boardColumns.ContainsKey(colBefore))
+                {
+                    FileLogger.WriteErrorToLog("can't create column because the column before doesn't exists!");
+                    return false;
                 }
                 else
                 {
@@ -111,7 +121,7 @@ namespace Kanban.BL
             return true;
         }
 
-        public bool swapColumnsPosition(string colBefore, string colToMove)
+        public bool replaceColumnsPosition(string colBefore, string colToMove)
         {
             try
             {
@@ -120,21 +130,30 @@ namespace Kanban.BL
                     FileLogger.WriteNullObjectExceptionToLogger<string>("swapColumnsPosition function");
                     return false;
                 }
-                RemoveColumn(colToMove);
-                addNewColumnToBoard(colBefore, colToMove);
+                Column saveCol = this.KanBanBoard.boardColumns[colToMove];
+                if (RemoveColumn(colToMove) && addNewColumnToBoard(colBefore, colToMove))
+                    this.KanBanBoard.boardColumns[colToMove].tasks = saveCol.tasks;//retriving the task that where in the column that we deleted
+                else {
+                    FileLogger.WriteErrorToLog("couldn't remove or add in swapColumnsPosition function");
+                    return false;
+                }
             }
             catch (Exception ex)
             {
                 FileLogger.WriteErrorToLog(ex + "in swapColumnsPosition function");
                 return false;
             }
-
             return true;
         }
 
         public bool PromoteTaskToNextPhase(Task task, string source, string target)
         {
-            if (task != null)
+            if (target.Equals(this.KanBanBoard.columnsOrder.Last))
+            {
+                FileLogger.WriteErrorToLog("The task is in last column - can not promote it!");
+                return false; //if the task is in last column there is no next column 
+            }
+            else if (task != null)
             {
                 Dictionary<string, Column> kanbancolumns = KanBanBoard.boardColumns;
                 Validation val = new Validation();
@@ -142,7 +161,6 @@ namespace Kanban.BL
                 {
                     if (val.checkSpaceInColumn(kanbancolumns[target])) //if there is space in the next Column- promote task to the next one
                     {
-                        MessageBox.Show("here");
                         Column sourceCol = kanbancolumns[source];
                         sourceCol.RemoveTask(task); //remove task from source column
                         kanbancolumns.Remove(source); //remove previous column
@@ -157,16 +175,24 @@ namespace Kanban.BL
                         FileLogger.write(Authantication.userRegisterd); //write to file
                         return true;
                     }
-                    else return false;//there is no space in the target column
+                    else
+                    {
+                        FileLogger.WriteErrorToLog("There is no space in the target column");
+                        return false;//there is no space in the target column
+                    }
                 }
-                else return false;
+                else
+                {
+                    FileLogger.WriteErrorToLog("Can't find the task in the target column!");
+                    return false;
+                }
+
             }
             else
             {
                 FileLogger.WriteNullObjectExceptionToLogger<Task>("PromoteTaskToNextPhase function");
+                return false;
             }
-            return false; //if the task is in last column there is no next column 
-
         }
 
         public string GetEmail()
@@ -198,7 +224,7 @@ namespace Kanban.BL
                 }
                 else
                 {
-                    FileLogger.WriteNullObjectExceptionToLogger<Task>("DeleteTask function");
+                    FileLogger.WriteErrorToLog("can't find the task to delete");
                     return false;
                 }
 
@@ -224,7 +250,9 @@ namespace Kanban.BL
 
         public string getNextColumn(string currCol)
         {
-            return this.KanBanBoard.columnsOrder.Find(currCol).Next.Value;
+            if (this.KanBanBoard.columnsOrder.Find(currCol).Next != null)
+                return this.KanBanBoard.columnsOrder.Find(currCol).Next.Value;
+            return null;
         }
 
         public bool EditTask(Task oldTask, Task newTask, string currCol)

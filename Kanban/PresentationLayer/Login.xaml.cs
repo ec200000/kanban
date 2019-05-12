@@ -29,9 +29,9 @@ namespace Kanban.PresentationLayer
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click_Login(object sender, RoutedEventArgs e)
         {
-            User user = VM.Login();
+            InterfaceLayer.InterfaceLayerUser user = VM.Login();
             string email = VM.Email;
             if (user!=null)//checking if the login succeed
             {

@@ -30,7 +30,7 @@ namespace Kanban.PresentationLayer
             this.email = user;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click_Replace(object sender, RoutedEventArgs e)
         {
             bool b = VM.ReplaceColumns();
             if (!b) MessageBox.Show("There is a problem with the things you entered");
@@ -42,7 +42,7 @@ namespace Kanban.PresentationLayer
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_Click_Back(object sender, RoutedEventArgs e)
         {
             KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
             kanban.Show();

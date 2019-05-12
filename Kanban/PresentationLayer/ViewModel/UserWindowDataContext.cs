@@ -37,12 +37,12 @@ class UserWindowDataContext : INotifyPropertyChanged
     }
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public User Login()
+    public InterfaceLayerUser Login()
     {
         UserService auth = new UserService();
         bool b = auth.login(email, pwd);
         if (b) {
-            User user = auth.GetUser(email);
+            InterfaceLayerUser user = auth.GetUser(email);
             return user;
         }
         else

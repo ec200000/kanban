@@ -11,7 +11,7 @@ namespace Kanban.PresentationLayer.ViewModel
 {
     public class BoardWindowDataContext : INotifyPropertyChanged
     {
-        User user;
+        InterfaceLayerUser user;
         string username;
         public BoardWindowDataContext(string user)
         {
@@ -82,12 +82,13 @@ namespace Kanban.PresentationLayer.ViewModel
                     PropertyChanged(this, new PropertyChangedEventArgs("Columns"));
             }
         }
-        public void ShowTheard(User user)
+        public void ShowTheard(InterfaceLayerUser user)
         {
             BindableCollection<BoardWindowTask> tasks = new BindableCollection<BoardWindowTask>();
-            foreach (Column col in user.KanBanBoard.boardColumns.Values)
+            InterfaceLayerBoard board = user.Board;
+            foreach (InterfaceLayerColumn col in user.Board.boardColumns.Values)
             {
-                foreach (Task t in col.getTasks())
+                foreach (InterfaceLayerTask t in col.tasks)
                 {
                     if (t != null)
                         tasks.Add(new BoardWindowTask(t));
@@ -104,7 +105,7 @@ namespace Kanban.PresentationLayer.ViewModel
             cv.Filter = o =>
             {
                 BoardWindowTask p = o as BoardWindowTask;
-                return (p.Title.ToUpper().Contains(SearchTerm.ToUpper()) & p.Description.ToUpper().Contains(SearchTerm.ToUpper()));
+                return (p.Title.ToUpper().Contains(SearchTerm.ToUpper()) || p.Description.ToUpper().Contains(SearchTerm.ToUpper()));
             };
             GridView = cv;
         }
@@ -127,10 +128,17 @@ namespace Kanban.PresentationLayer.ViewModel
         public bool CreateColumn() {
             Validation val = new Validation();
             UserService service = new UserService();
-            if (val.validateColumnInfo(Column,user.KanBanBoard.boardColumns))
+            if (val.validateColumnInfo(Column, service.GetBoard(username)))
             {
-                service.CreateColumn(username, PrevColumn,Column);
-                return true;
+                if (service.CreateColumn(username, Column, PrevColumn))
+                {
+                    this.user = service.GetUser(username);
+                    ShowTheard(user);
+                    return true;
+                }
+                    
+                else
+                    return false;
             }
             else
                 return false;
@@ -153,11 +161,45 @@ namespace Kanban.PresentationLayer.ViewModel
 
         public bool ReplaceColumns()
         {
-            if (user.swapColumnsPosition(Column, PrevColumn)){ 
+            UserService ser = new UserService();
+            if (ser.replaceColumnsPosition(username, PrevColumn, Column)){
+                ShowTheard(user);
                 return true;
             }
             else
                 return false;
+        }
+
+        public void SortByCreationTime(string userName)
+        {
+            UserService serv = new UserService();
+            InterfaceLayerUser user = serv.GetUser(userName);
+            ColumnService colserv = new ColumnService();
+            colserv.SortByCreationTime(userName);
+            ShowTheard(user);
+        }
+
+        public void SortByDueDate(string userName)
+        {
+            UserService serv = new UserService();
+            InterfaceLayerUser user = serv.GetUser(userName);
+            ColumnService colserv = new ColumnService();
+            colserv.SortByDueDate(userName);
+            ShowTheard(user);
+        }
+
+        public void RemoveColumn(string x) {
+            UserService ser = new UserService();
+            bool b = ser.RemoveColumn(username, x);
+            if(b)
+            {
+                this.user = ser.GetUser(username);
+                ShowTheard(user);
+            }
+            else
+            {
+                MessageBox.Show("something went wrong");
+            }
         }
     }
 }

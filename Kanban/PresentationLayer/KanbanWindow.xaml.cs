@@ -24,7 +24,7 @@ namespace Kanban.PresentationLayer
     public partial class KanbanWindow : Window
     {
         BoardWindowDataContext VM;
-        User user;
+        InterfaceLayerUser user;
         string email;
         public KanbanWindow(string user)
         {
@@ -36,62 +36,51 @@ namespace Kanban.PresentationLayer
             this.user = service.GetUser(user);
             this.email = user;
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            TaskContext t = new TaskContext(email);
-            Tasks.Items.RemoveAt(Tasks.SelectedIndex);
-        }
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Button_Click_NewCol(object sender, RoutedEventArgs e)
         {
             NewColumn newColumn = new NewColumn(email);
             newColumn.Show();
             Close();
         }
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void Button_Click_NewTask(object sender, RoutedEventArgs e)
         {
             NewTask newTask = new NewTask(email);
             newTask.Show();
             Close();
         }
-        private void Button_Click_4(object sender, RoutedEventArgs e)
+        private void Button_Click_Limit(object sender, RoutedEventArgs e)
         {
             string x = Interaction.InputBox("Limit tasks number","Add number","THANK YOU",-1,-1);
-            char[] c = x.ToCharArray();
-            int n = c[0];
+            int n = Int32.Parse(x);
             ColumnService service = new ColumnService();
-            service.SetMaxNumOfTaskInColumn(n, email);
-        }
-        private void Button_Click_5(object sender, RoutedEventArgs e)
-        {
-            string x = Interaction.InputBox("Remove column", "Enter column's name", "THANK YOU", -1, -1);
-            bool b = user.RemoveColumn(x);
-            if(b)
-                VM.ShowTheard(user);
-            else
+            bool b = service.SetMaxNumOfTaskInColumn(n, email);
+            if(!b)
             {
                 MessageBox.Show("something went wrong");
             }
         }
-        private void Button_Click_6(object sender, RoutedEventArgs e)
+        private void Button_Click_Remove(object sender, RoutedEventArgs e)
+        {
+            string x = Interaction.InputBox("Remove column", "Enter column's name", "THANK YOU", -1, -1);
+            VM.RemoveColumn(x);
+            Tasks.Items.Refresh();
+        }
+        private void Button_Click_Filter(object sender, RoutedEventArgs e)
         {
             VM.UpdateFilter();
         }
 
-        private void Button_Click_7(object sender, RoutedEventArgs e)
+        private void Button_Click_DueDate(object sender, RoutedEventArgs e)
         {
-            ColumnService service = new ColumnService();
-            service.SortByDueDate(email);
-            VM.ShowTheard(user);
+            VM.SortByDueDate(email);
         }
 
-        private void Button_Click_8(object sender, RoutedEventArgs e)
+        private void Button_Click_Creation(object sender, RoutedEventArgs e)
         {
-            ColumnService service = new ColumnService();
-            service.SortByCreationTime(email);
-            VM.ShowTheard(user);
+            VM.SortByCreationTime(email);
         }
 
-        private void Button_Click_9(object sender, RoutedEventArgs e)
+        private void Button_Click_Replace(object sender, RoutedEventArgs e)
         {
             ReplaceColumns replace = new ReplaceColumns(email);
             replace.Show();
@@ -103,8 +92,8 @@ namespace Kanban.PresentationLayer
             BoardWindowTask bwk = Tasks.SelectedItem as BoardWindowTask;
             if (bwk != null)
             {
-                BL.Task task = new BL.Task(bwk.Title, bwk.Description, bwk.DueDate, bwk.Column, bwk.CreationTime);
-                EditTask edit = new EditTask(task,email);
+                InterfaceLayerTask task = new InterfaceLayerTask(bwk.Title, bwk.Description, bwk.DueDate, bwk.CreationTime, bwk.Column);
+                TaskWindow edit = new TaskWindow(task,email);
                 edit.Show();
                 Close();
             }

@@ -5,16 +5,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using Task = Kanban.BL.Task;
 
 namespace Kanban.InterfaceLayer
 {
     public class UserService
     {
-        public User GetUser(string userName)
+        public bool RemoveColumn(string username, string colToRemove)
+        {
+            User user = Authantication.userRegisterd[username];
+            return user.RemoveColumn(colToRemove);
+        }
+
+        public Board GetBoard(string userName)
+        {
+            if (userName!=null)
+            {
+                User user = Authantication.userRegisterd[userName];
+                return user.KanBanBoard;
+            }
+            else FileLogger.WriteNullObjectExceptionToLogger<string>("GetBoard[Service] function");
+            return null;
+        }
+        public InterfaceLayerUser GetUser(string userName)
         {
             if (userName != null)
             {
-                return Authantication.userRegisterd[userName];
+                User user = Authantication.userRegisterd[userName];
+                Dictionary<string, InterfaceLayerColumn> boardColumns = new Dictionary<string, InterfaceLayerColumn>();
+                foreach (KeyValuePair<string,Column> col in user.KanBanBoard.boardColumns)
+                {
+                    List<InterfaceLayerTask> tasks = new List<InterfaceLayerTask>();
+                    Column c = col.Value;
+                    foreach(Task t in c.getTasks())
+                    {
+                        InterfaceLayerTask taskToAdd = new InterfaceLayerTask(t.title, t.description, t.dueDate, t.creationTime, t.currCol);
+                        tasks.Add(taskToAdd);
+                    }
+                    string colName = col.Key;
+                    InterfaceLayerColumn tempCol = new InterfaceLayerColumn(colName, tasks, c.maxNumOfTaskInColumn);
+                    boardColumns.Add(colName,tempCol);
+                }
+                InterfaceLayerBoard board = new InterfaceLayerBoard(boardColumns);
+                InterfaceLayerUser user1 = new InterfaceLayerUser(user.GetEmail(), board);
+                return user1;
             }
             else
                 FileLogger.WriteNullObjectExceptionToLogger<string>("GetUser[Service] function");
@@ -67,7 +102,7 @@ namespace Kanban.InterfaceLayer
 
         public bool CreateTask(string userName, string title, string description, DateTime dueDate)
         {
-            User user = GetUser(userName);
+            User user = Authantication.userRegisterd[userName];
             string currCol = user.KanBanBoard.columnsOrder.ElementAt(0);
             return user.CreateTask(title, description, dueDate, currCol);
         }
@@ -75,33 +110,38 @@ namespace Kanban.InterfaceLayer
         //newCol,prvCol we get from the user in the create New column screen
         public bool CreateColumn(string userName, string newCol, string prvCol)
         {
-            User user = GetUser(userName);
+            User user = Authantication.userRegisterd[userName];
             return user.addNewColumnToBoard(prvCol, newCol);
         }
 
-        public bool PromoteTaskToNextPhase(string userName, BL.Task task)
+        public bool PromoteTaskToNextPhase(string userName,InterfaceLayerTask task)
         {
-            User user = GetUser(userName);
-            string currCol = task.currCol;
+            User user = Authantication.userRegisterd[userName];
+            string currCol = task.CurrCol;
             string targetCol = user.KanBanBoard.columnsOrder.Find(currCol).Next.Value;
             if (targetCol == null)
             {
                 FileLogger.WriteErrorToLog("the task is in the last column - can't promote the task!");
                 return false;
             }
-            return user.PromoteTaskToNextPhase(task, currCol, targetCol);
+            BL.Task t = new BL.Task(task.Title, task.Description, task.DueDate, task.CurrCol, task.CreationTime);
+            return user.PromoteTaskToNextPhase(t, currCol, targetCol);
         }
 
-        public bool SwapColumnsPosition(string colBefore, string colToMove, string userName)
+   
+
+        public bool EditTask(InterfaceLayerTask old, InterfaceLayerTask newTask, string userName, string currCol)
         {
-            User user = GetUser(userName);
-            return user.swapColumnsPosition(colBefore, colToMove);
+            User user = Authantication.userRegisterd[userName];
+            BL.Task old1 = new BL.Task(old.Title, old.Description, old.DueDate, old.CurrCol, old.CreationTime);
+            BL.Task newTask1 = new BL.Task(newTask.Title, newTask.Description, newTask.DueDate, newTask.CurrCol, old.CreationTime);
+            return user.EditTask(old1, newTask1, currCol);
         }
 
-        public bool EditTask(BL.Task old, BL.Task newTask, string userName, string currCol)
+        public bool replaceColumnsPosition(string userName , string colBefore, string colToMove)
         {
-            User user = GetUser(userName);
-            return user.EditTask(old, newTask, currCol);
+            User user = Authantication.userRegisterd[userName];
+            return user.replaceColumnsPosition(colBefore, colToMove);
         }
     }
 }

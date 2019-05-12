@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -25,9 +25,13 @@ namespace Kanban.BL
             this.tasks = new List<Task>();
         }
 
-        public void setMaxNumOfTaskInColumn(int newLimit)
+        public bool setMaxNumOfTaskInColumn(int newLimit)
         {
+            if (newLimit < tasks.Count)
+                return false;
             this.maxNumOfTaskInColumn = newLimit;
+            FileLogger.write(Authantication.userRegisterd);
+            return true;
         }
 
         public List<Task> getTasks()

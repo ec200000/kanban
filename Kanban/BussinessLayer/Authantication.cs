@@ -41,6 +41,7 @@ namespace Kanban.BL
                 {
                     userRegisterd = FileLogger.Read();
                     User userInSystem = userRegisterd[email];
+                    userInSystem.KanBanBoard.Remove_duplicates();
                     userInSystem.isconnected = true;
                     string msg = email + " logged in to the system";
                     FileLogger.WriteInformationToLog(msg);

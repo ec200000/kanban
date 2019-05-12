@@ -4,12 +4,13 @@ using System.Windows.Data;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Kanban.InterfaceLayer;
+using System.Windows;
 
 namespace Kanban.PresentationLayer.ViewModel
 {
     public class TaskContext : INotifyPropertyChanged
     {
-        User user;
+        InterfaceLayerUser user;
         string username;
 
         string title = "";
@@ -90,13 +91,13 @@ namespace Kanban.PresentationLayer.ViewModel
             }
         }
 
-        public TaskContext(Task task, string user)
+        public TaskContext(InterfaceLayerTask task, string user)
         {
-            this.Title = task.title;
-            this.Column = task.currCol;
-            this.DueDate = task.dueDate;
-            this.CreationTime = task.creationTime;
-            this.Description = task.description;
+            this.Title = task.Title;
+            this.Column = task.CurrCol;
+            this.DueDate = task.DueDate;
+            this.CreationTime = task.CreationTime;
+            this.Description = task.Description;
             UserService service = new UserService();
             this.user = service.GetUser(user);
             this.username = user;
@@ -109,15 +110,15 @@ namespace Kanban.PresentationLayer.ViewModel
             this.username = user;
         }
 
-        public bool EditTask(Task task)
+        public bool EditTask(InterfaceLayerTask task)
         {
             Validation val = new Validation();
             UserService service = new UserService();
             if (val.validateTaskInfo(Title, Description, DueDate))
             { //update the task
-                Task newTask = new Task(Title, description, DueDate, Column, task.creationTime);
-                Column currentColumn = user.KanBanBoard.boardColumns[newTask.currCol];
-                if (service.EditTask(task, newTask,username,task.currCol))
+                InterfaceLayerTask newTask = new InterfaceLayerTask(Title, description, DueDate, task.CreationTime, Column);
+                InterfaceLayerColumn currentColumn = user.Board.boardColumns[newTask.CurrCol];
+                if (service.EditTask(task, newTask,username,task.CurrCol))
                     return true;
                 else
                     return false;
@@ -140,7 +141,7 @@ namespace Kanban.PresentationLayer.ViewModel
                 return false;
 
         }
-        public bool PromoteTask(Task task)
+        public bool PromoteTask(InterfaceLayerTask task)
         {
             UserService service = new UserService();
             if(service.PromoteTaskToNextPhase(username,task))

@@ -13,7 +13,7 @@ namespace Kanban.BL
 {
     class Validation
     {
-        private const int DESCRIPTION_LENGTH = 30;
+        private const int DESCRIPTION_LENGTH = 300;
         private const int TITLE_LENGTH = 50;
         private const int MAX_PASSWORD_LENGTH = 20;
         private const int MIN_PASSWORD_LENGTH = 4;
@@ -211,12 +211,11 @@ namespace Kanban.BL
             return true;
         }
 
-        //In every column on the board there is max number of tasks. when the user will create task(in backlog column) we need
-        //to check first if we have space in the column, or when the user will promote the task to other column we need to check 
-        //if there is space for it
+        
         public bool checkSpaceInColumn(Column column)
         {
-            if (column == null || column.GetNumOfTasks() == column.maxNumOfTaskInColumn)
+            // >=, because if for example we have 10 tasks and than the user limited to 5, we can't add more even though the number of tasks in column doesn't equal to the limit
+            if (column == null || column.GetNumOfTasks() >= column.maxNumOfTaskInColumn)
             {
                 FileLogger.WriteErrorToLog("There is no space in the column!");
                 return false;
@@ -236,12 +235,21 @@ namespace Kanban.BL
         }
 
         //checks if the column is already exsits
-        public bool validateColumnInfo(string title, Dictionary<string, Column> d)
+        public bool validateColumnInfo(string title, Board b)
         {
+            Dictionary<string, Column> d = b.boardColumns;
+            if (title.Equals(""))
+            {
+                FileLogger.WriteErrorToLog("Column name can't be empty!");
+                return false;
+            }
             foreach (string s in d.Keys)
             {
                 if (s.Equals(title))
+                {
                     return false;
+                }
+                    
             }
             return true;
         }

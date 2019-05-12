@@ -20,11 +20,11 @@ namespace Kanban.PresentationLayer
     public partial class EditTask : Window
     {
         TaskContext VM;
-        BL.Task task;
-        User user;
+        InterfaceLayerTask task;
+        InterfaceLayerUser user;
         string email;
 
-        public EditTask(BL.Task task, string user)
+        public EditTask(InterfaceLayerTask task, string user)
         {
             InitializeComponent();
 
@@ -36,7 +36,7 @@ namespace Kanban.PresentationLayer
             this.DataContext = this.VM;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_Click_Save(object sender, RoutedEventArgs e)
         {
             if (!VM.EditTask(task)) MessageBox.Show("There is a problem with the things you entered");
             else {
@@ -46,13 +46,13 @@ namespace Kanban.PresentationLayer
             }
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Button_Click_Back(object sender, RoutedEventArgs e)
         {
             KanbanWindow kanban = new KanbanWindow(email); //opening the kanban window
             kanban.Show();
             Close();
         }
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void Button_Click_Promote(object sender, RoutedEventArgs e)
         {
             if (!VM.PromoteTask(task)) MessageBox.Show("There is a problem with the things you entered");
             else

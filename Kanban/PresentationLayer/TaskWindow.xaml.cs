@@ -20,11 +20,11 @@ namespace Kanban.PresentationLayer
     public partial class TaskWindow : Window
     {
         TaskContext VM;
-        BL.Task task;
-        User user;
+        InterfaceLayerTask task;
+        InterfaceLayerUser user;
         string email;
 
-        public TaskWindow(BL.Task task, string user)
+        public TaskWindow(InterfaceLayerTask task, string user)
         {
             InitializeComponent();
 
@@ -32,18 +32,18 @@ namespace Kanban.PresentationLayer
             UserService service = new UserService();
             this.user = service.GetUser(user);
             this.VM = new TaskContext(task,user); //format the VM
-            this.email = Name;
+            this.email = user;
             this.DataContext = this.VM;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_Click_Edit(object sender, RoutedEventArgs e)
         {
             EditTask edit = new EditTask(task,email); //open the task edit window
             edit.Show();
             Close();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Button_Click_Back(object sender, RoutedEventArgs e)
         {
             KanbanWindow kanban = new KanbanWindow(email); //return to the kanban window
             kanban.Show();
